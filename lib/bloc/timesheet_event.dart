@@ -3,11 +3,11 @@ part of 'timesheet_bloc.dart';
 @immutable
 sealed class TimesheetEvent {}
 
-class AddTimeSheetEvent extends TimesheetEvent {}
+class AddTimesheetEvent extends TimesheetEvent {}
 
 class ToggleTimesheetEvent extends TimesheetEvent {
-  final int index;
+  final int id;
 
-  ToggleTimesheetEvent(this.index);
+  ToggleTimesheetEvent(this.id);
 }
 

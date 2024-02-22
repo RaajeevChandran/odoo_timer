@@ -3,8 +3,8 @@ part of 'timesheet_bloc.dart';
 @immutable
 abstract class TimesheetState {}
 
-class TimerInitialState extends TimesheetState {
+class TimesheetInitialState extends TimesheetState {
   final List<Timesheet> timesheets;
 
-  TimerInitialState(this.timesheets);
+  TimesheetInitialState(this.timesheets);
 }

@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+abstract class AppPalette {
+
+  static const sunglowYellow = Color.fromRGBO(255, 198, 41, 1);
+
+}
+
 class AppTheme {
   static ThemeData theme = ThemeData(
       fontFamily: 'Inter-Regular',

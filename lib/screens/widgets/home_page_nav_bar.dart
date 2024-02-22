@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:odoo_timer/bloc/timesheet_bloc.dart';
 import 'package:odoo_timer/utils/extensions.dart';
 
 /// A custom navigation bar that implements the [PreferredSize] widget which is internally used
 /// by default Flutter app bars for both Android and iOS
-class HomeNavBar extends StatelessWidget implements PreferredSize {
-  const HomeNavBar({super.key});
+class HomePageNavBar extends StatelessWidget implements PreferredSize {
+  const HomePageNavBar({super.key});
 
   @override
   Size get preferredSize => const Size.fromHeight(60);
@@ -22,14 +24,16 @@ class HomeNavBar extends StatelessWidget implements PreferredSize {
             children: [
               Text(
                 "Timesheets",
-                style: context.textTeme.headlineLarge,
+                style: context.textTheme.headlineLarge,
               ),
               PlatformIconButton(
                   icon: const Icon(
                     Icons.add,
                     size: 24,
                   ),
-                  onPressed: () {})
+                  onPressed: () {
+                    context.read<TimesheetBloc>().add(AddTimesheetEvent());
+                  })
             ],
           ),
         ),
