@@ -14,11 +14,14 @@ class TimesheetCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Material(
+        elevation: 0,
+        color: context.colorScheme.secondary,
+        borderRadius: BorderRadius.circular(15),
         child: Container(
           padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            color: Colors.red,
+            color: context.colorScheme.secondary,
           ),
           child: Row(
             children: [
@@ -74,7 +77,7 @@ class _TimesheetInfo extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(height: 24, width: 24,child: Icon(icon)),
+          Icon(icon, size: 15,),
           const SizedBox(
             width: 5,
           ),
@@ -98,39 +101,37 @@ class _TimerToggle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-      decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(64)),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          StreamBuilder<String>(
-            stream: timesheet.elapsedTimeStream,
-            builder: (context, snapshot) {
-              if (snapshot.hasData || snapshot.data == null) {
-                return Text(
-                  snapshot.data == null ? "00:00" : snapshot.data!,
-                  style: context.textTheme.labelLarge,
-                );
-              }
-              return Container();
-            },
-          ),
-          BlocBuilder<TimesheetBloc, TimesheetState>(
-            builder: (context, state) {
-              return GestureDetector(
-                child:
-                    Icon(timesheet.isRunning ? Icons.pause : Icons.play_arrow),
-                onTap: () {
-                  context
-                      .read<TimesheetBloc>()
-                      .add(ToggleTimesheetEvent(timesheet.id));
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+          decoration: BoxDecoration(
+              color: !timesheet.isRunning ? context.colorScheme.secondary : Colors.white, borderRadius: BorderRadius.circular(64)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              StreamBuilder<String>(
+                stream: timesheet.elapsedTimeStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData || snapshot.data == null) {
+                    return Text(
+                      snapshot.data == null ? "00:00" : snapshot.data!,
+                      style: context.textTheme.labelLarge?.copyWith(color: !timesheet.isRunning ? Colors.white: Colors.black),
+                    );
+                  }
+                  return Container();
                 },
-              );
-            },
-          )
-        ],
-      ),
-    );
+              ),
+              GestureDetector(
+                    child: Icon(
+                      timesheet.isRunning ? Icons.pause : Icons.play_arrow,
+                      color: timesheet.isRunning ? Colors.black : Colors.white,
+                    ),
+                    onTap: () {
+                      context
+                          .read<TimesheetBloc>()
+                          .add(ToggleTimesheetEvent(timesheet.id));
+                    },
+                  )
+            ],
+          ),
+        );
   }
 }

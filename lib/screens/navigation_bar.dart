@@ -22,7 +22,6 @@ class Navbar extends StatelessWidget {
               PlatformIconButton(
                   icon: const Icon(
                     Icons.add,
-                    size: 24,
                   ),
                   onPressed: () {})
             ],

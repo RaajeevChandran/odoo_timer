@@ -62,15 +62,9 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/fonts/static/Inter-Black.ttf
-    - assets/fonts/static/Inter-Bold.ttf
-    - assets/fonts/static/Inter-ExtraBold.ttf
-    - assets/fonts/static/Inter-ExtraLight.ttf
-    - assets/fonts/static/Inter-Light.ttf
-    - assets/fonts/static/Inter-Medium.ttf
-    - assets/fonts/static/Inter-Regular.ttf
-    - assets/fonts/static/Inter-SemiBold.ttf
-    - assets/fonts/static/Inter-Thin.ttf
+    - assets/fonts/Inter/Inter-Regular.ttf
+    - assets/fonts/Roboto/Roboto-Regular.ttf
+    - assets/images/odoo_text.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

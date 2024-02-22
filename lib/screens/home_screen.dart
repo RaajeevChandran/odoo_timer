@@ -1,17 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:odoo_timer/bloc/timesheet_bloc.dart';
-import 'package:odoo_timer/screens/widgets/home_page_nav_bar.dart';
 import 'package:odoo_timer/screens/widgets/no_timesheets_widget.dart';
 import 'package:odoo_timer/screens/widgets/timesheet_card.dart';
 import 'package:odoo_timer/utils/utils.dart';
+import 'package:odoo_timer/widgets/custom_scaffold.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(appBar: HomePageNavBar(), body: _Body());
+    return CustomScaffold(
+        appBar: AppBar(
+          title: Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                "Timesheets",
+                style: context.textTheme.headlineLarge,
+              )),
+          actions: [
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4),
+              child: SizedBox(
+                width: 50,
+                child: PlatformIconButton(
+                    color: context.colorScheme.secondary,
+                    icon: const Icon(
+                      Icons.add,
+                    ),
+                    onPressed: () {
+                      context.read<TimesheetBloc>().add(AddTimesheetEvent());
+                    }),
+              ),
+            )
+          ],
+        ),
+        body: const _Body());
   }
 }
 
@@ -37,9 +64,17 @@ class _TotalTimesheets extends StatelessWidget {
     return SliverPadding(
       padding: const EdgeInsets.only(top: 10, left: 5, bottom: 10),
       sliver: SliverToBoxAdapter(
-        child: Text(
-          "You have 16 timers",
-          style: context.textTheme.labelLarge,
+        child: BlocBuilder<TimesheetBloc, TimesheetState>(
+          builder: (context, state) {
+            int numberOfTimersheets =
+                (state as TimesheetInitialState).timesheets.length;
+            return numberOfTimersheets > 0
+                ? Text(
+                    "You have $numberOfTimersheets ${"timer".plural(numberOfTimersheets)}",
+                    style: context.textTheme.labelLarge,
+                  )
+                : const SizedBox();
+          },
         ),
       ),
     );
@@ -60,11 +95,10 @@ class _TimesheetsListView extends StatelessWidget {
         }
 
         return ListView.builder(
-          itemCount: state.timesheets.length,
-          itemBuilder: (context, index) {
-            return TimesheetCard(timesheet: (state as TimesheetInitialState).timesheets[index],);
-          },
-        );
+            itemCount: state.timesheets.length,
+            itemBuilder: (context, index) => TimesheetCard(
+                  timesheet: (state as TimesheetInitialState).timesheets[index],
+                ));
       },
     );
   }
