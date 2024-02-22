@@ -59,9 +59,16 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/fonts/static/Inter-Black.ttf
+    - assets/fonts/static/Inter-Bold.ttf
+    - assets/fonts/static/Inter-ExtraBold.ttf
+    - assets/fonts/static/Inter-ExtraLight.ttf
+    - assets/fonts/static/Inter-Light.ttf
+    - assets/fonts/static/Inter-Medium.ttf
+    - assets/fonts/static/Inter-Regular.ttf
+    - assets/fonts/static/Inter-SemiBold.ttf
+    - assets/fonts/static/Inter-Thin.ttf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
