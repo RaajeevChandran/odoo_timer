@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:odoo_timer/screens/home_screen.dart';
 import 'package:odoo_timer/utils/theme.dart';
 
 void main() {
@@ -12,6 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: AppTheme.theme,
+      home: HomeScreen(),
     );
   }
 }
