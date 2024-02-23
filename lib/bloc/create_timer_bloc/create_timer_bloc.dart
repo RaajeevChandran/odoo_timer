@@ -41,7 +41,14 @@ class CreateTimerBloc extends Bloc<CreateTimerEvent, CreateTimerState> {
               task: currentState.task!,
               isFavorite: currentState.isFavorite)));
         }else {
-          
+          List<String> requiredFields = [CreateTimerFormField.project, CreateTimerFormField.task].map((e) => e.name).toList();
+          if(currentState.project != null) {
+            requiredFields.removeAt(0);
+          }else if(currentState.task != null) {
+            requiredFields.removeAt(1);
+          }
+          emit(CreateTimerFormValidationError(message: "Please fill ${requiredFields.join(' and ')} fields"));
+          emit(CreateTimerInitial(project: currentState.project, task: currentState.task, isFavorite: currentState.isFavorite, description: currentState.description));
         }
       }
     });

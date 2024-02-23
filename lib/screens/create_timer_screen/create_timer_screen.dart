@@ -5,6 +5,7 @@ import 'package:odoo_timer/bloc/create_timer_bloc/create_timer_bloc.dart';
 import 'package:odoo_timer/bloc/timesheet_bloc/timesheet_bloc.dart';
 import 'package:odoo_timer/models/models.dart';
 import 'package:odoo_timer/utils/utils.dart';
+import 'package:overlay_support/overlay_support.dart';
 import '../../widgets/widgets.dart';
 
 class CreateTimerScreen extends StatelessWidget {
@@ -17,6 +18,10 @@ class CreateTimerScreen extends StatelessWidget {
         if (state is CreateTimerFormValidationSuccess) {
           context.read<TimesheetBloc>().add(AddTimesheetEvent(state.timesheet));
           Navigator.pop(context);
+        } else if (state is CreateTimerFormValidationError) {
+          showSimpleNotification(
+              Text(state.message, style: context.textTheme.bodyLarge),
+              background: context.colorScheme.error);
         }
       },
       child: CustomScaffold(
@@ -93,7 +98,6 @@ class _Form extends StatelessWidget {
               child: BlocBuilder<CreateTimerBloc, CreateTimerState>(
                 buildWhen: (previous, current) => current is CreateTimerInitial,
                 builder: (context, state) {
-
                   bool isFavorite = (state as CreateTimerInitial).isFavorite;
 
                   void onChanged(bool? value) {

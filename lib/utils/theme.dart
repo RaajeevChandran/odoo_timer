@@ -20,6 +20,9 @@ class AppTheme {
         checkColor: MaterialStateColor.resolveWith((states) =>  Colors.black),
         overlayColor: MaterialStateColor.resolveWith((states) => Colors.white),
       ),
+      dialogTheme: const DialogTheme(
+        backgroundColor: Color.fromARGB(255, 58, 80, 144)
+      ),
       colorScheme: const ColorScheme.light(
           brightness: Brightness.light,
           primary: Colors.white,

@@ -5,19 +5,21 @@ sealed class CreateTimerState {}
 class CreateTimerInitial extends CreateTimerState {
   Project? project;
   Task? task;
-  String? description;
+  String description;
   bool isFavorite;
 
   CreateTimerInitial({
      this.project,
      this.task,
-     this.description,
+     this.description = "",
      this.isFavorite = false,
   });
 }
 
 class CreateTimerFormValidationError extends CreateTimerState {
+  final String message;
 
+  CreateTimerFormValidationError({required this.message});
 }
 
 class CreateTimerFormValidationSuccess extends CreateTimerState {
