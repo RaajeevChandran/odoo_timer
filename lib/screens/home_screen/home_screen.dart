@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:odoo_timer/bloc/timesheet_bloc/timesheet_bloc.dart';
+import 'package:odoo_timer/screens/create_timer_screen/create_timer_screen.dart';
 import 'package:odoo_timer/screens/home_screen/widgets/no_timesheets_widget.dart';
 import 'package:odoo_timer/screens/home_screen/widgets/timesheet_card.dart';
 import 'package:odoo_timer/utils/utils.dart';
@@ -12,27 +13,37 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-        appBar: AppBar(
-          title: Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                "Timesheets",
-                style: context.textTheme.headlineLarge,
-              )),
-          actions: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4),
-              child: Center(
-                child: PlatformIconButton(
-                  padding: EdgeInsets.zero,
-                  color: context.colorScheme.secondary,
-                  icon: const Icon(Icons.add, color: Colors.white), onPressed: (){}),
-              )),
-          ],
-        ),
-        body: const _Body());
+    return BlocListener<TimesheetBloc, TimesheetState>(
+      listener: (context, state) {
+        Navigator.of(context).push(platformPageRoute(context: context, builder: (context) => const CreateTimerScreen(),));
+      },
+      listenWhen: (previous, current) {
+        return (current is TimesheetCreateButtonTapState);
+      },
+      child: CustomScaffold(
+          appBar: AppBar(
+            title: Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  "Timesheets",
+                  style: context.textTheme.headlineLarge,
+                )),
+            actions: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4),
+                child: Center(
+                  child: PlatformIconButton(
+                    padding: EdgeInsets.zero,
+                    color: context.colorScheme.secondary,
+                    icon: const Icon(Icons.add, color: Colors.white), onPressed: (){
+                      context.read<TimesheetBloc>().add(TimesheetCreateButtonTapEvent());
+                    }),
+                )),
+            ],
+          ),
+          body: const _Body()),
+    );
   }
 }
 
@@ -59,6 +70,9 @@ class _TotalTimesheets extends StatelessWidget {
       padding: const EdgeInsets.only(top: 10, left: 5, bottom: 10),
       sliver: SliverToBoxAdapter(
         child: BlocBuilder<TimesheetBloc, TimesheetState>(
+          buildWhen:(previous, current) {
+            return (current is TimesheetInitialState);
+          },
           builder: (context, state) {
             int numberOfTimersheets =
                 (state as TimesheetInitialState).timesheets.length;
@@ -81,6 +95,9 @@ class _TimesheetsListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TimesheetBloc, TimesheetState>(
+      buildWhen: (previous, current) {
+        return (current is TimesheetInitialState);
+      },
       builder: (context, state) {
         state = state as TimesheetInitialState;
 
