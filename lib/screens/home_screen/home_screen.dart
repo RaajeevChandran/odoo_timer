@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:odoo_timer/bloc/timesheet_bloc.dart';
-import 'package:odoo_timer/screens/widgets/no_timesheets_widget.dart';
-import 'package:odoo_timer/screens/widgets/timesheet_card.dart';
+import 'package:odoo_timer/bloc/timesheet_bloc/timesheet_bloc.dart';
+import 'package:odoo_timer/screens/home_screen/widgets/no_timesheets_widget.dart';
+import 'package:odoo_timer/screens/home_screen/widgets/timesheet_card.dart';
 import 'package:odoo_timer/utils/utils.dart';
 import 'package:odoo_timer/widgets/custom_scaffold.dart';
 

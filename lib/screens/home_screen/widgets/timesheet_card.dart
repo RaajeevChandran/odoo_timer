@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:odoo_timer/bloc/timesheet_bloc.dart';
+import 'package:odoo_timer/bloc/timesheet_bloc/timesheet_bloc.dart';
 import 'package:odoo_timer/utils/utils.dart';
-import '../../models/timesheet.dart';
+import '../../../models/timesheet.dart';
 
 class TimesheetCard extends StatelessWidget {
   final Timesheet timesheet;
