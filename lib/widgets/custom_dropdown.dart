@@ -7,7 +7,7 @@ import 'package:odoo_timer/utils/utils.dart';
 class CustomDropdown<T> extends StatefulWidget {
   final String hintText;
   final List<CustomDropdownItem<T>> items;
-  final Function(T) onChanged;
+  final Function(CustomDropdownItem<T>) onChanged;
 
   const CustomDropdown(
       {required this.hintText,
@@ -110,7 +110,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
                                       setState(() {
                                         _selectedItem = widget.items[index];
                                         _isDropdownOpen = false;
-                                        widget.onChanged(_selectedItem!.value);
+                                        widget.onChanged(_selectedItem!);
                                       });
                                       _overlayEntry?.remove();
                                     },

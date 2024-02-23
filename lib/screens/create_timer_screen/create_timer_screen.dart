@@ -12,63 +12,91 @@ class CreateTimerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => CreateTimerBloc(),
-      child: BlocListener<TimesheetBloc, TimesheetState>(
-        listener: (context, state) {
-          Navigator.pop(context);
-        },
-        listenWhen: (previous, current) => (previous is TimesheetInitialState &&
-            current is TimesheetInitialState &&
-            previous.timesheets.length != current.timesheets.length),
-        child: CustomScaffold(
-            appBar: AppBar(
-              title:
-                  Text("Create Timer", style: context.textTheme.headlineLarge),
+    return BlocListener<TimesheetBloc, TimesheetState>(
+      listener: (context, state) {
+        Navigator.pop(context);
+      },
+      listenWhen: (previous, current) => (previous is TimesheetInitialState &&
+          current is TimesheetInitialState &&
+          previous.timesheets.length != current.timesheets.length),
+      child: CustomScaffold(
+          appBar: AppBar(
+            title: Text("Create Timer", style: context.textTheme.headlineLarge),
+          ),
+          body: SafeArea(
+            child: Stack(
+              children: [
+                Align(alignment: Alignment.topCenter, child: _Form()),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: PlatformElevatedButton(
+                    child: const Text("Create Timer"),
+                    onPressed: () {
+                      // context.read<TimesheetBloc>().add(AddTimesheetEvent());
+                      context.read<CreateTimerBloc>().add(ValidateFormEvent());
+                    },
+                  ),
+                )
+              ],
             ),
-            body: SafeArea(
-              child: Stack(
-                children: [
-                  const Align(alignment: Alignment.topCenter, child: _Form()),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: PlatformElevatedButton(
-                      child: const Text("Create Timer"),
-                      onPressed: () {
-                        context.read<TimesheetBloc>().add(AddTimesheetEvent());
-                      },
-                    ),
-                  )
-                ],
-              ),
-            )),
-      ),
+          )),
     );
   }
 }
 
 class _Form extends StatelessWidget {
-  const _Form();
+  // const _Form();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CustomDropdown<String>(
-          hintText: "Project",
-          items: ["Project 1", "Project 2", "Project 3"]
-              .map((e) => CustomDropdownItem<String>(value: e, label: e))
-              .toList(),
-          onChanged: (value) {},
-        ),
-        CustomDropdown<String>(
-          hintText: "Task",
-          items: ["Project 1", "Project 2", "Project 3"]
-              .map((e) => CustomDropdownItem<String>(value: e, label: e))
-              .toList(),
-          onChanged: (value) {},
-        ),
-        const CustomTextField()
+        ...List.generate(CreateTimerFormField.values.length, (index) {
+          final field = CreateTimerFormField.values[index];
+          switch (index) {
+            case 2:
+              return CustomTextField(
+                hintText: field.name,
+                onChanged: (value) {
+                  context
+                      .read<CreateTimerBloc>()
+                      .add(TextValueChanged(field.name, value ?? ""));
+                },
+              );
+            default:
+              return CustomDropdown<String>(
+                hintText: field.name,
+                items: ["Project 1", "Project 2", "Project 3"]
+                    .map((e) => CustomDropdownItem<String>(value: e, label: e))
+                    .toList(),
+                onChanged: (dropdown) {
+                  context
+                      .read<CreateTimerBloc>()
+                      .add(TextValueChanged(field.name, dropdown.value));
+                },
+              );
+          }
+        }),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+          child: Row(
+            children: [
+              BlocBuilder<CreateTimerBloc, CreateTimerState>(
+                builder: (context, state) {
+                  print("state ${(state as CreateTimerInitial).isFavorite}");
+                  return Checkbox(
+                      value: (state as CreateTimerInitial).isFavorite,
+                      onChanged: (value) {
+                        context
+                            .read<CreateTimerBloc>()
+                            .add(FavoriteCheckboxValueChanged(value ?? false));
+                      });
+                },
+              ),
+              const Text("Make Favorite")
+            ],
+          ),
+        )
       ],
     );
   }

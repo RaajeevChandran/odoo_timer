@@ -7,13 +7,20 @@ abstract class AppPalette {
 class AppTheme {
   static ThemeData theme = ThemeData(
       appBarTheme: const AppBarTheme(
-        elevation: 0,
-        backgroundColor: Color.fromARGB(255, 12, 29, 77),
-        scrolledUnderElevation: 0,
-        iconTheme: IconThemeData(color: Colors.white)
-      ),
+          elevation: 0,
+          backgroundColor: Color.fromARGB(255, 12, 29, 77),
+          scrolledUnderElevation: 0,
+          iconTheme: IconThemeData(color: Colors.white)),
       iconTheme: const IconThemeData(color: Colors.white, size: 24),
-      popupMenuTheme: const PopupMenuThemeData(elevation: 0,),
+      popupMenuTheme: const PopupMenuThemeData(
+        elevation: 0,
+      ),
+      checkboxTheme: CheckboxThemeData(
+        fillColor: MaterialStateColor.resolveWith((states) => Colors.white),
+        checkColor: MaterialStateColor.resolveWith((states) => Colors.black),
+        overlayColor: MaterialStateColor.resolveWith((states) => Colors.white),
+
+      ),
       colorScheme: const ColorScheme.light(
           brightness: Brightness.light,
           primary: Colors.white,
@@ -51,11 +58,10 @@ class AppTheme {
             height: 1.2,
           ),
           headlineLarge: TextStyle(
-            fontFamily: 'Inter-Regular',
-            fontSize: 32.0,
-            height: 1.25,
-            fontWeight: FontWeight.w700
-          ),
+              fontFamily: 'Inter-Regular',
+              fontSize: 32.0,
+              height: 1.25,
+              fontWeight: FontWeight.w700),
           headlineMedium: TextStyle(
             fontFamily: 'Inter-Regular',
             fontSize: 28.0,
@@ -104,11 +110,10 @@ class AppTheme {
             height: 1.5,
           ),
           bodyMedium: TextStyle(
-            fontFamily: 'Inter-Regular',
-            fontSize: 14.0,
-            height: 1.42,
-            fontWeight: FontWeight.w400
-          ),
+              fontFamily: 'Inter-Regular',
+              fontSize: 14.0,
+              height: 1.42,
+              fontWeight: FontWeight.w400),
           bodySmall: TextStyle(
             fontFamily: 'Inter-Regular',
             fontSize: 12.0,
