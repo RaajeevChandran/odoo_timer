@@ -3,18 +3,13 @@ part of 'create_timer_bloc.dart';
 @immutable
 sealed class CreateTimerEvent {}
 
-class TextValueChanged extends CreateTimerEvent {
-  final String label, value;
+class CreateTimerScreenInit extends CreateTimerEvent {}
 
-  TextValueChanged(this.label, this.value);
+class FormValueChanged<T> extends CreateTimerEvent {
+  final CreateTimerFormField field;
+  final T value;
+
+  FormValueChanged(this.field, this.value);
 }
 
-
-
-class FavoriteCheckboxValueChanged extends CreateTimerEvent {
-  final bool value;
-
-  FavoriteCheckboxValueChanged(this.value);
-}
-
-class ValidateFormEvent extends CreateTimerEvent {}
+class CreateTimerButtonTapEvent extends CreateTimerEvent {}

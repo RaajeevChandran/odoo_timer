@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:odoo_timer/bloc/create_timer_bloc/create_timer_bloc.dart';
 import 'package:odoo_timer/bloc/timesheet_bloc/timesheet_bloc.dart';
 import 'package:odoo_timer/screens/create_timer_screen/create_timer_screen.dart';
 import 'package:odoo_timer/screens/home_screen/widgets/no_timesheets_widget.dart';
@@ -30,6 +31,7 @@ class HomeScreen extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   color: context.colorScheme.secondary,
                   icon: const Icon(Icons.add, color: Colors.white), onPressed: (){
+                    context.read<CreateTimerBloc>().add(CreateTimerScreenInit());
                     Navigator.of(context).push(platformPageRoute(context: context, builder: (context) => const CreateTimerScreen(),));
                   }),
               )),

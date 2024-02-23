@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:odoo_timer/models/models.dart';
 import 'package:odoo_timer/utils/utils.dart';
@@ -54,7 +53,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(widget.hintText),
+                      Text(widget.hintText, overflow: TextOverflow.ellipsis,),
                       if (_selectedItem != null)
                         Text(_selectedItem!.label.toString(), style: context.textTheme.bodyLarge,)
                     ],

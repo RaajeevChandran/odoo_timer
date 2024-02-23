@@ -1,45 +1,49 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:odoo_timer/models/custom_dropdown_item.dart';
+import 'package:odoo_timer/models/models.dart';
 
 part 'create_timer_event.dart';
 part 'create_timer_state.dart';
 
 class CreateTimerBloc extends Bloc<CreateTimerEvent, CreateTimerState> {
-  CreateTimerBloc()
-      : super(CreateTimerInitial(
-            project: "", task: "", description: "", isFavorite: false)) {
+  CreateTimerBloc() : super(CreateTimerInitial()) {
+    on<CreateTimerScreenInit>((event, emit) {
+      emit(CreateTimerInitial());
+    });
 
-    on<TextValueChanged>((event, emit) {
+    on<FormValueChanged>((event, emit) {
       if (state is CreateTimerInitial) {
-        final currentState = state as CreateTimerInitial;
-        switch (event.label) {
-          case "Task":
-            currentState.task = event.value;
+        CreateTimerInitial currentState = state as CreateTimerInitial;
+        switch (event.field) {
+          case CreateTimerFormField.task:
+            currentState = currentState.copyWith(task: event.value);
             break;
-          case "Description":
-          currentState.description = event.value;
-          break;
+          case CreateTimerFormField.description:
+            currentState = currentState.copyWith(description: event.value);
+            break;
+          case CreateTimerFormField.project:
+            currentState = currentState.copyWith(project: event.value);
+            break;
           default:
-            currentState.project = event.value;
-            break;
+            currentState = currentState.copyWith(isFavorite: event.value);
         }
         emit(currentState);
       }
     });
 
-
-    on<FavoriteCheckboxValueChanged>((event, emit){
+    on<CreateTimerButtonTapEvent>((event, emit) {
       if (state is CreateTimerInitial) {
         final currentState = state as CreateTimerInitial;
-        emit(currentState.copyWith(isFavorite: event.value));
+        if (currentState.project != null && currentState.task != null) {
+          emit(CreateTimerFormValidationSuccess(Timesheet(
+              id: DateTime.now().millisecondsSinceEpoch,
+              project: currentState.project!,
+              task: currentState.task!,
+              isFavorite: currentState.isFavorite)));
+        }else {
+          
+        }
       }
-    });
-
-    on<ValidateFormEvent>((event, emit) {
-      inspect((state as CreateTimerInitial));
     });
   }
 }

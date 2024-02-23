@@ -17,9 +17,8 @@ class AppTheme {
       ),
       checkboxTheme: CheckboxThemeData(
         fillColor: MaterialStateColor.resolveWith((states) => Colors.white),
-        checkColor: MaterialStateColor.resolveWith((states) => Colors.black),
+        checkColor: MaterialStateColor.resolveWith((states) =>  Colors.black),
         overlayColor: MaterialStateColor.resolveWith((states) => Colors.white),
-
       ),
       colorScheme: const ColorScheme.light(
           brightness: Brightness.light,

@@ -1,26 +1,36 @@
 part of 'create_timer_bloc.dart';
 
-@immutable
 sealed class CreateTimerState {}
 
-final class CreateTimerInitial extends CreateTimerState {
-  String project;
-  String task;
-  String description;
+class CreateTimerInitial extends CreateTimerState {
+  Project? project;
+  Task? task;
+  String? description;
   bool isFavorite;
 
   CreateTimerInitial({
-    required this.project,
-    required this.task,
-    required this.description,
-    required this.isFavorite,
+     this.project,
+     this.task,
+     this.description,
+     this.isFavorite = false,
   });
 }
 
+class CreateTimerFormValidationError extends CreateTimerState {
+
+}
+
+class CreateTimerFormValidationSuccess extends CreateTimerState {
+  final Timesheet timesheet;
+
+  CreateTimerFormValidationSuccess(this.timesheet);
+}
+
+
 extension CreateTimerInitialCopyWith on CreateTimerInitial {
   CreateTimerInitial copyWith({
-    String? project,
-    String? task,
+    Project? project,
+    Task? task,
     String? description,
     bool? isFavorite,
   }) {

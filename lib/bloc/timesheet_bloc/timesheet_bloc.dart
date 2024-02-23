@@ -30,7 +30,7 @@ class TimesheetBloc extends Bloc<TimesheetEvent, TimesheetState> {
       final currentState = state as TimesheetInitialState;
 
       final updatedTimesheets = List<Timesheet>.from(currentState.timesheets)
-        ..add(Timesheet(DateTime.now().millisecondsSinceEpoch));
+        ..add(event.timesheet);
 
       emit(TimesheetInitialState(updatedTimesheets));
   }
