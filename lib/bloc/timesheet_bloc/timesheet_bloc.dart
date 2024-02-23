@@ -25,14 +25,15 @@ class TimesheetBloc extends Bloc<TimesheetEvent, TimesheetState> {
     });
   }
 
+
   void _onAddTimesheetEvent(AddTimesheetEvent event, Emitter<TimesheetState> emit) {
       final currentState = state as TimesheetInitialState;
 
       final updatedTimesheets = List<Timesheet>.from(currentState.timesheets)
-        ..add(Timesheet(DateTime.now().millisecondsSinceEpoch));
+        ..add(event.timesheet);
 
       emit(TimesheetInitialState(updatedTimesheets));
-    }
+  }
 
   void _onToggleTimeSheetEvent(ToggleTimesheetEvent event, Emitter<TimesheetState> emit) {
       if (state is TimesheetInitialState) {
@@ -44,7 +45,7 @@ class TimesheetBloc extends Bloc<TimesheetEvent, TimesheetState> {
 
         emit(TimesheetInitialState(timesheets));
       }
-    }
+  }
 
   @override
   Future<void> close() {

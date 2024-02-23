@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:odoo_timer/bloc/timesheet_bloc.dart';
+import 'package:odoo_timer/bloc/timesheet_bloc/timesheet_bloc.dart';
 import 'package:odoo_timer/utils/utils.dart';
-import '../../models/timesheet.dart';
+import '../../../models/timesheet.dart';
 
 class TimesheetCard extends StatelessWidget {
   final Timesheet timesheet;
@@ -60,11 +60,11 @@ class _TimesheetInfo extends StatelessWidget {
       constraints:
           BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.56),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        _buildInfo(CupertinoIcons.star, "iOS App Development",
+        _buildInfo(timesheet.isFavorite ? CupertinoIcons.star_fill : CupertinoIcons.star, timesheet.project.name,
             context.textTheme.titleMedium),
-        _buildInfo(CupertinoIcons.bag, "SO056 - Booqio V2",
+        _buildInfo(CupertinoIcons.bag, timesheet.task.name,
             context.textTheme.bodyMedium),
-        _buildInfo(CupertinoIcons.clock, "Deadline 07/20/2023",
+        _buildInfo(CupertinoIcons.clock, "Deadline ${timesheet.project.deadline.format()}",
             context.textTheme.bodyMedium),
       ]),
     );

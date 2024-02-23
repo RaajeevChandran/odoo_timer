@@ -8,3 +8,6 @@ class TimesheetInitialState extends TimesheetState {
 
   TimesheetInitialState(this.timesheets);
 }
+
+class TimesheetCreateButtonTapState extends TimesheetState {}
+
