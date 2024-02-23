@@ -28,13 +28,17 @@ final List<Project> projects = [
     ),
   ];
 
-final List<Task> tasks = [
+final List<Task> dummyTasks = [
     Task(
+      id: '1',
       name: 'Design',
       description: 'Create logos that reflect the essence of the project',
+      project: projects[0]
     ),
     Task(
+      id: '2',
       name: 'Website',
       description: 'Build a captivating landing page to engage visitors',
+      project: projects[1]
     ),
 ];

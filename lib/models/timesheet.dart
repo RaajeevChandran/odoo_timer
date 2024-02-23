@@ -14,8 +14,6 @@ class Timesheet {
   // facilitates the updation of elapsed time in the UI by running it periodically for each second
   Timer? timer;
 
-  final Project project;
-
   final Task task;
 
   final StreamController<String> _elapsedTimeStreamController =
@@ -25,9 +23,8 @@ class Timesheet {
 
   Timesheet(
       {required this.id,
-      required this.project,
-      required this.task,
       required this.isFavorite,
+      required this.task,
       this.isRunning = false,
       this.isCompleted = false})
       : stopwatch = Stopwatch() {

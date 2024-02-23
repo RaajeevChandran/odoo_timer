@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:odoo_timer/bloc/timesheet_bloc/timesheet_bloc.dart';
+import 'package:odoo_timer/bloc/tasks_bloc/tasks_bloc.dart';
+import 'package:odoo_timer/models/models.dart';
 import 'package:odoo_timer/utils/utils.dart';
-import '../../../models/timesheet.dart';
 
 class TimesheetCard extends StatelessWidget {
   final Timesheet timesheet;
@@ -60,11 +60,11 @@ class _TimesheetInfo extends StatelessWidget {
       constraints:
           BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.56),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        _buildInfo(timesheet.isFavorite ? CupertinoIcons.star_fill : CupertinoIcons.star, timesheet.project.name,
+        _buildInfo(timesheet.isFavorite ? CupertinoIcons.star_fill : CupertinoIcons.star, timesheet.task.project.name,
             context.textTheme.titleMedium),
         _buildInfo(CupertinoIcons.bag, timesheet.task.name,
             context.textTheme.bodyMedium),
-        _buildInfo(CupertinoIcons.clock, "Deadline ${timesheet.project.deadline.format()}",
+        _buildInfo(CupertinoIcons.clock, "Deadline ${timesheet.task.project.deadline.format()}",
             context.textTheme.bodyMedium),
       ]),
     );
@@ -107,18 +107,18 @@ class _TimerToggle extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              StreamBuilder<String>(
-                stream: timesheet.elapsedTimeStream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData || snapshot.data == null) {
-                    return Text(
-                      snapshot.data == null ? "00:00" : snapshot.data!,
-                      style: context.textTheme.labelLarge?.copyWith(color: !timesheet.isRunning ? Colors.white: Colors.black),
-                    );
-                  }
-                  return Container();
-                },
-              ),
+              // StreamBuilder<String>(
+              //   stream: timesheet.elapsedTimeStream,
+              //   builder: (context, snapshot) {
+              //     if (snapshot.hasData || snapshot.data == null) {
+              //       return Text(
+              //         snapshot.data == null ? "00:00" : snapshot.data!,
+              //         style: context.textTheme.labelLarge?.copyWith(color: !timesheet.isRunning ? Colors.white: Colors.black),
+              //       );
+              //     }
+              //     return Container();
+              //   },
+              // ),
               GestureDetector(
                     child: Icon(
                       timesheet.isRunning ? Icons.pause : Icons.play_arrow,
@@ -126,8 +126,8 @@ class _TimerToggle extends StatelessWidget {
                     ),
                     onTap: () {
                       context
-                          .read<TimesheetBloc>()
-                          .add(ToggleTimesheetEvent(timesheet.id));
+                          .read<TasksBloc>()
+                          .add(ToggleTimesheetEvent(timesheet: timesheet));
                     },
                   )
             ],
