@@ -18,7 +18,7 @@ dependencies:
   flutter_bloc: ^8.1.4
   flutter_platform_widgets: ^6.1.0
   flutter_native_splash: ^2.3.13
-  flutter_launcher_icons: ^0.13.1
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:

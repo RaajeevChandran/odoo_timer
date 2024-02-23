@@ -10,8 +10,10 @@ class AppTheme {
         elevation: 0,
         backgroundColor: Color.fromARGB(255, 12, 29, 77),
         scrolledUnderElevation: 0,
+        iconTheme: IconThemeData(color: Colors.white)
       ),
       iconTheme: const IconThemeData(color: Colors.white, size: 24),
+      popupMenuTheme: const PopupMenuThemeData(elevation: 0,),
       colorScheme: const ColorScheme.light(
           brightness: Brightness.light,
           primary: Colors.white,
