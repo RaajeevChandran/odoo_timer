@@ -24,18 +24,12 @@ class HomeScreen extends StatelessWidget {
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4),
-              child: SizedBox(
-                width: 50,
+              child: Center(
                 child: PlatformIconButton(
-                    color: context.colorScheme.secondary,
-                    icon: const Icon(
-                      Icons.add,
-                    ),
-                    onPressed: () {
-                      context.read<TimesheetBloc>().add(AddTimesheetEvent());
-                    }),
-              ),
-            )
+                  padding: EdgeInsets.zero,
+                  color: context.colorScheme.secondary,
+                  icon: const Icon(Icons.add, color: Colors.white), onPressed: (){}),
+              )),
           ],
         ),
         body: const _Body());

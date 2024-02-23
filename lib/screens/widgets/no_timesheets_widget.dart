@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:odoo_timer/utils/utils.dart';
 
+// a placeholder widget that is shown when there are no timesheets
 class NoTimesheetsWidget extends StatelessWidget {
   const NoTimesheetsWidget({super.key});
 
