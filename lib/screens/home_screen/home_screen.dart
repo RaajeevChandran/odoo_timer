@@ -13,37 +13,29 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<TimesheetBloc, TimesheetState>(
-      listener: (context, state) {
-        Navigator.of(context).push(platformPageRoute(context: context, builder: (context) => const CreateTimerScreen(),));
-      },
-      listenWhen: (previous, current) {
-        return (current is TimesheetCreateButtonTapState);
-      },
-      child: CustomScaffold(
-          appBar: AppBar(
-            title: Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  "Timesheets",
-                  style: context.textTheme.headlineLarge,
-                )),
-            actions: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4),
-                child: Center(
-                  child: PlatformIconButton(
-                    padding: EdgeInsets.zero,
-                    color: context.colorScheme.secondary,
-                    icon: const Icon(Icons.add, color: Colors.white), onPressed: (){
-                      context.read<TimesheetBloc>().add(TimesheetCreateButtonTapEvent());
-                    }),
-                )),
-            ],
-          ),
-          body: const _Body()),
-    );
+    return CustomScaffold(
+        appBar: AppBar(
+          title: Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                "Timesheets",
+                style: context.textTheme.headlineLarge,
+              )),
+          actions: [
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4),
+              child: Center(
+                child: PlatformIconButton(
+                  padding: EdgeInsets.zero,
+                  color: context.colorScheme.secondary,
+                  icon: const Icon(Icons.add, color: Colors.white), onPressed: (){
+                    Navigator.of(context).push(platformPageRoute(context: context, builder: (context) => const CreateTimerScreen(),));
+                  }),
+              )),
+          ],
+        ),
+        body: const _Body());
   }
 }
 

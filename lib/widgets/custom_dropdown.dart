@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:odoo_timer/models/models.dart';
 import 'package:odoo_timer/utils/utils.dart';
@@ -26,7 +27,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
   
   bool _isDropdownOpen = false;
   
-  late OverlayEntry _overlayEntry;
+  OverlayEntry? _overlayEntry;
 
   @override
   Widget build(BuildContext context) {
@@ -55,12 +56,12 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
                     children: [
                       Text(widget.hintText),
                       if (_selectedItem != null)
-                        Text(_selectedItem!.label.toString())
+                        Text(_selectedItem!.label.toString(), style: context.textTheme.bodyLarge,)
                     ],
                   ),
                   Icon(_isDropdownOpen
-                      ? Icons.arrow_drop_up_sharp
-                      : Icons.arrow_drop_down_sharp),
+                      ? Icons.keyboard_arrow_up
+                      : Icons.keyboard_arrow_down),
                 ],
               ),
             ),
@@ -111,7 +112,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
                                         _isDropdownOpen = false;
                                         widget.onChanged(_selectedItem!.value);
                                       });
-                                      _overlayEntry.remove();
+                                      _overlayEntry?.remove();
                                     },
                                   ),
                               separatorBuilder: (_, __) => Divider(
@@ -130,15 +131,23 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
 
   void _toggleDropdown() {
     if (_isDropdownOpen) {
-      _overlayEntry.remove();
+      _overlayEntry?.remove();
     } else {
       _overlayEntry = _createOverlayEntry();
 
-      Overlay.of(context).insert(_overlayEntry);
+      Overlay.of(context).insert(_overlayEntry!);
     }
     setState(() {
       _isDropdownOpen = !_isDropdownOpen;
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    try {
+      _overlayEntry?.remove();
+    }catch(e) {}
   }
 }
 

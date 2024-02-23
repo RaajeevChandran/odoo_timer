@@ -13,8 +13,6 @@ class TimesheetBloc extends Bloc<TimesheetEvent, TimesheetState> {
 
     on<ToggleTimesheetEvent>(_onToggleTimeSheetEvent);
 
-    on<TimesheetCreateButtonTapEvent>(_onTimesheetCreateButtonTap);
-
     // emits a state to facilitate the UI updation of elapsed time since the timer of timesheet started
     (state as TimesheetInitialState).timesheets.forEach((timer) {
       timer.elapsedTimeStream.listen((elapsedTime) {
@@ -27,9 +25,6 @@ class TimesheetBloc extends Bloc<TimesheetEvent, TimesheetState> {
     });
   }
 
-  void _onTimesheetCreateButtonTap(TimesheetCreateButtonTapEvent event, Emitter<TimesheetState> emit) {
-    emit(TimesheetCreateButtonTapState());
-  }
 
   void _onAddTimesheetEvent(AddTimesheetEvent event, Emitter<TimesheetState> emit) {
       final currentState = state as TimesheetInitialState;

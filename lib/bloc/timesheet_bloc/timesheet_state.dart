@@ -10,3 +10,4 @@ class TimesheetInitialState extends TimesheetState {
 }
 
 class TimesheetCreateButtonTapState extends TimesheetState {}
+

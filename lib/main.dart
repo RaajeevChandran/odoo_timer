@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:odoo_timer/bloc/create_timer_bloc/create_timer_bloc.dart';
 import 'package:odoo_timer/bloc/timesheet_bloc/timesheet_bloc.dart';
 import 'package:odoo_timer/screens/home_screen/home_screen.dart';
 import 'package:odoo_timer/utils/theme.dart';
@@ -17,7 +16,6 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => TimesheetBloc()),
-        BlocProvider(create: (_) => CreateTimerBloc())
       ],
       child: MaterialApp(
         theme: AppTheme.theme,
