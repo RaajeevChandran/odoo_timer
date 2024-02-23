@@ -15,22 +15,29 @@ class TasksBloc extends Bloc<TaskEvent, TaskState> {
     on<ToggleTimesheetEvent>(_onToggleTimesheetEvent);
 
     // emits a state to facilitate the UI updation of elapsed time since the timer of timesheet started
-    // (state as TaskInitialState).timesheets.forEach((timer) {
-    //   timer.elapsedTimeStream.listen((elapsedTime) {
-    //     final updatedTimesheets = List<Timesheet>.from((state as TaskInitialState).timesheets);
-    //     final index = updatedTimesheets.indexWhere((element) => element.id == timer.id);
-    //     updatedTimesheets[index] = timer;
-    //     // ignore: invalid_use_of_visible_for_testing_member
-    //     emit(TaskInitialState(updatedTimesheets));
-    //   });
-    // });
+    (state as TaskInitialState).tasks.timesheetsFromAllTasks().forEach((timer) {
+      timer.elapsedTimeStream.listen((elapsedTime) {
+        final currentState = (state as TaskInitialState);
+        
+        final task = currentState.tasks.firstWhere((task) => task.id == timer.taskId);
+
+        final updatedTimesheets = List<Timesheet>.from(task.timesheets);
+        final timesheetIndex = updatedTimesheets.indexWhere((element) => element.id == timer.id);
+        updatedTimesheets[timesheetIndex] = timer;
+
+        task.timesheets = updatedTimesheets;
+
+        // ignore: invalid_use_of_visible_for_testing_member
+        emit(TaskInitialState(currentState.tasks));
+      });
+    });
   }
 
 
   void _onAddTimesheetToTaskEvent(AddTimesheetToTaskEvent event, Emitter<TaskState> emit) {
       final currentState = state as TaskInitialState;
 
-      final task = currentState.tasks.firstWhere((task) => task.id == event.timesheet.task.id);
+      final task = currentState.tasks.firstWhere((task) => task.id == event.timesheet.taskId);
 
       task.timesheets.add(event.timesheet);
 
@@ -40,13 +47,12 @@ class TasksBloc extends Bloc<TaskEvent, TaskState> {
   void _onToggleTimesheetEvent(ToggleTimesheetEvent event, Emitter<TaskState> emit) {
       if (state is TaskInitialState) {
         final currentState = state as TaskInitialState;
-        final task = currentState.tasks.firstWhere((task) => task.id == event.timesheet.task.id);
-        // final timesheets = List<Timesheet>.from(currentState.timesheets);
+        final task = currentState.tasks.firstWhere((task) => task.id == event.timesheet.taskId);
 
-        // final timer = timesheets.firstWhere((timesheet) => timesheet.id == event.id);
-        // timer.toggle(); 
+        final timer = task.timesheets.firstWhere((timesheet) => timesheet.id == event.timesheet.id);
+        timer.toggle(); 
 
-        // emit(TaskInitialState(timesheets));
+        emit(TaskInitialState(currentState.tasks));
       }
   }
 

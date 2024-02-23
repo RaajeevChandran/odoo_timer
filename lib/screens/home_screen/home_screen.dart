@@ -33,8 +33,13 @@ class HomeScreen extends StatelessWidget {
                       color: context.colorScheme.secondary,
                       icon: const Icon(Icons.add, color: Colors.white),
                       onPressed: () {
-                        context.read<CreateTimerBloc>().add(CreateTimerScreenInit());
-                        Navigator.of(context).push(platformPageRoute(context: context, builder: (context) => const CreateTimerScreen(),));
+                        context
+                            .read<CreateTimerBloc>()
+                            .add(CreateTimerScreenInit());
+                        Navigator.of(context).push(platformPageRoute(
+                          context: context,
+                          builder: (context) => const CreateTimerScreen(),
+                        ));
                       }),
                 )),
           ],
@@ -70,8 +75,10 @@ class _TotalTimesheets extends StatelessWidget {
             return (current is TaskInitialState);
           },
           builder: (context, state) {
-            int numberOfTimersheets =
-                (state as TaskInitialState).tasks.timesheetsFromAllTasks().length;
+            int numberOfTimersheets = (state as TaskInitialState)
+                .tasks
+                .timesheetsFromAllTasks()
+                .length;
             return numberOfTimersheets > 0
                 ? Text(
                     "You have $numberOfTimersheets ${"timer".plural(numberOfTimersheets)}",
@@ -92,9 +99,10 @@ class _TimesheetsListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<TasksBloc, TaskState>(
       builder: (context, state) {
-        state = state as TaskInitialState;
+        final currentState = state as TaskInitialState;
 
-        List<Timesheet> timesheets = state.tasks.timesheetsFromAllTasks();
+        List<Timesheet> timesheets =
+            currentState.tasks.timesheetsFromAllTasks();
 
         if (timesheets.isEmpty) {
           return const NoTimesheetsWidget();
@@ -103,6 +111,8 @@ class _TimesheetsListView extends StatelessWidget {
         return ListView.builder(
             itemCount: timesheets.length,
             itemBuilder: (context, index) => TimesheetCard(
+                  task: currentState.tasks.firstWhere(
+                      (task) => task.id == timesheets[index].taskId),
                   timesheet: timesheets[index],
                 ));
       },

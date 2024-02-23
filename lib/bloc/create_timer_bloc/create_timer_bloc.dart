@@ -43,7 +43,8 @@ class CreateTimerBloc extends Bloc<CreateTimerEvent, CreateTimerState> {
           currentState.task!.project = currentState.project!;
           emit(CreateTimerFormValidationSuccess(task: currentState.task!, timesheet: Timesheet(
               id: DateTime.now().millisecondsSinceEpoch,
-              task: currentState.task!,
+              description: currentState.description,
+              taskId: currentState.task!.id,
               isFavorite: currentState.isFavorite)));
         } else {
           List<String> requiredFields = [

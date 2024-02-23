@@ -7,7 +7,11 @@ extension StringUtils on String {
 }
 
 extension DateTimeFormat on DateTime {
-  String format() {
-    return DateFormat("MM/dd/yyyy").format(this);
+  String format({String pattern = "MM/dd/yyyy"}) {
+    return DateFormat(pattern).format(this);
+  }
+
+  String get dayName {
+    return DateFormat('EEEE').format(this);
   }
 }

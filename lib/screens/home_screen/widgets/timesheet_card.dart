@@ -1,48 +1,59 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:odoo_timer/bloc/task_detail_bloc/task_detail_bloc.dart';
 import 'package:odoo_timer/bloc/tasks_bloc/tasks_bloc.dart';
 import 'package:odoo_timer/models/models.dart';
+import 'package:odoo_timer/screens/task_detail_screen/task_detail_screen.dart';
 import 'package:odoo_timer/utils/utils.dart';
 
 class TimesheetCard extends StatelessWidget {
+  final Task task;
   final Timesheet timesheet;
-  const TimesheetCard({required this.timesheet, super.key});
+  const TimesheetCard({required this.task, required this.timesheet, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Material(
-        elevation: 0,
-        color: context.colorScheme.secondary,
-        borderRadius: BorderRadius.circular(15),
-        child: Container(
-          padding: const EdgeInsets.all(15),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: context.colorScheme.secondary,
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 2,
-                height: 85,
-                decoration: BoxDecoration(
-                    color: AppPalette.sunglowYellow,
-                    borderRadius: BorderRadius.circular(8)),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              _TimesheetInfo(
-                timesheet: timesheet,
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              _TimerToggle(timesheet: timesheet)
-            ],
+      child: GestureDetector(
+        onTap: (){
+          context.read<TaskDetailBloc>().add(TaskDetailInit(task: task));
+          Navigator.push(context, platformPageRoute(context: context,builder: (_) => const TaskDetailsScreen()));
+        },
+        child: Material(
+          elevation: 0,
+          color: context.colorScheme.secondary,
+          borderRadius: BorderRadius.circular(15),
+          child: Container(
+            padding: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: context.colorScheme.secondary,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 2,
+                  height: 85,
+                  decoration: BoxDecoration(
+                      color: AppPalette.sunglowYellow,
+                      borderRadius: BorderRadius.circular(8)),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                _TimesheetInfo(
+                  task: task,
+                  timesheet: timesheet,
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                _TimerToggle(timesheet: timesheet)
+              ],
+            ),
           ),
         ),
       ),
@@ -51,8 +62,9 @@ class TimesheetCard extends StatelessWidget {
 }
 
 class _TimesheetInfo extends StatelessWidget {
+  final Task task;
   final Timesheet timesheet;
-  const _TimesheetInfo({required this.timesheet});
+  const _TimesheetInfo({required this.task, required this.timesheet});
 
   @override
   Widget build(BuildContext context) {
@@ -60,11 +72,11 @@ class _TimesheetInfo extends StatelessWidget {
       constraints:
           BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.56),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        _buildInfo(timesheet.isFavorite ? CupertinoIcons.star_fill : CupertinoIcons.star, timesheet.task.project.name,
+        _buildInfo(timesheet.isFavorite ? CupertinoIcons.star_fill : CupertinoIcons.star, task.project.name,
             context.textTheme.titleMedium),
-        _buildInfo(CupertinoIcons.bag, timesheet.task.name,
+        _buildInfo(CupertinoIcons.bag, task.name,
             context.textTheme.bodyMedium),
-        _buildInfo(CupertinoIcons.clock, "Deadline ${timesheet.task.project.deadline.format()}",
+        _buildInfo(CupertinoIcons.clock, "Deadline ${task.project.deadline.format()}",
             context.textTheme.bodyMedium),
       ]),
     );
@@ -103,22 +115,22 @@ class _TimerToggle extends StatelessWidget {
     return Container(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
           decoration: BoxDecoration(
-              color: !timesheet.isRunning ? context.colorScheme.secondary : Colors.white, borderRadius: BorderRadius.circular(64)),
+              color: !timesheet.isRunning ? context.colorScheme.tertiary : Colors.white, borderRadius: BorderRadius.circular(64)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // StreamBuilder<String>(
-              //   stream: timesheet.elapsedTimeStream,
-              //   builder: (context, snapshot) {
-              //     if (snapshot.hasData || snapshot.data == null) {
-              //       return Text(
-              //         snapshot.data == null ? "00:00" : snapshot.data!,
-              //         style: context.textTheme.labelLarge?.copyWith(color: !timesheet.isRunning ? Colors.white: Colors.black),
-              //       );
-              //     }
-              //     return Container();
-              //   },
-              // ),
+              StreamBuilder<String>(
+                stream: timesheet.elapsedTimeStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData || snapshot.data == null) {
+                    return Text(
+                      snapshot.data == null ? "00:00" : snapshot.data!,
+                      style: context.textTheme.labelLarge?.copyWith(color: !timesheet.isRunning ? Colors.white: Colors.black),
+                    );
+                  }
+                  return Container();
+                },
+              ),
               GestureDetector(
                     child: Icon(
                       timesheet.isRunning ? Icons.pause : Icons.play_arrow,

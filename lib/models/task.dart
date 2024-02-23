@@ -10,6 +10,10 @@ class Task {
       required this.name,
       required this.project,
       required this.description});
+
+  List<Timesheet> get activeTimesheets {
+    return timesheets.where((timesheet) => !timesheet.isCompleted).toList();
+  }
 }
 
 extension TaskExtension on List<Task> {

@@ -15,6 +15,12 @@ class AppTheme {
       popupMenuTheme: const PopupMenuThemeData(
         elevation: 0,
       ),
+      tabBarTheme: const TabBarTheme(
+        dividerColor: Colors.white,
+        dividerHeight: 0.5,
+        indicatorSize: TabBarIndicatorSize.label,
+        unselectedLabelColor: Colors.white
+      ),
       checkboxTheme: CheckboxThemeData(
         fillColor: MaterialStateColor.resolveWith((states) => Colors.white),
         checkColor: MaterialStateColor.resolveWith((states) =>  Colors.black),

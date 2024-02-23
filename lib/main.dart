@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:odoo_timer/bloc/create_timer_bloc/create_timer_bloc.dart';
+import 'package:odoo_timer/bloc/task_detail_bloc/task_detail_bloc.dart';
 import 'package:odoo_timer/bloc/tasks_bloc/tasks_bloc.dart';
 import 'package:odoo_timer/screens/home_screen/home_screen.dart';
 import 'package:odoo_timer/utils/theme.dart';
@@ -18,7 +19,8 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => TasksBloc()),
-        BlocProvider(create: (_) => CreateTimerBloc())
+        BlocProvider(create: (_) => CreateTimerBloc()),
+        BlocProvider(create: (_) => TaskDetailBloc())
       ],
       child: OverlaySupport.global(
         child: MaterialApp(
