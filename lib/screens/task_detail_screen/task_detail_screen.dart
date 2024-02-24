@@ -39,9 +39,6 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
           Navigator.pop(context);
         }else if(state is FavoriteValueChanged) {
           context.read<TasksBloc>().add(FavoriteValueChangedEvent(task: state.task));
-          // showSimpleNotification(
-          //     Text("Deleted task", style: context.textTheme.bodyLarge),
-          //     background: context.colorScheme.error);
         }
       },
       child: CustomScaffold(
@@ -52,7 +49,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                     state is TaskDetailInitial && state.task != null
                         ? Text(
                             state.task!.name,
-                            style: context.textTheme.headlineLarge,
+                            style: context.textTheme.headlineSmall
                           )
                         : const SizedBox()),
             centerTitle: true,

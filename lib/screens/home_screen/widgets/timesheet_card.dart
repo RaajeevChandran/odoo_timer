@@ -18,8 +18,8 @@ class TimesheetCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TapAnimatable(
-        onPressed: () {
+      child: GestureDetector(
+        onTap: () {
           context.read<TaskDetailBloc>().add(TaskDetailInit(task: task));
           Navigator.push(context, platformPageRoute(context: context,builder: (_) => const TaskDetailsScreen()));
         },
@@ -43,15 +43,15 @@ class TimesheetCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8)),
                 ),
                 const SizedBox(
-                  width: 10,
+                  width: 8,
                 ),
                 _TimesheetInfo(
                   task: task,
                   timesheet: timesheet,
                 ),
-                const SizedBox(
-                  width: 5,
-                ),
+                // const SizedBox(
+                //   width: 5,
+                // ),
                 _TimerToggle(timesheet: timesheet)
               ],
             ),
@@ -69,9 +69,8 @@ class _TimesheetInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints:
-          BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.56),
+    return Expanded(
+      flex: 3,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         _buildInfo(
             task.isFavorite
@@ -121,33 +120,31 @@ class _TimerToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-        decoration: BoxDecoration(
-            color: !timesheet.isRunning
-                ? context.colorScheme.tertiary
-                : Colors.white,
-            borderRadius: BorderRadius.circular(64)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ElapsedTimeWidget(timesheet: timesheet),
-            if (!timesheet.isCompleted)
-              TapAnimatable(
-                child: Icon(
-                  timesheet.isRunning ? Icons.pause : Icons.play_arrow,
-                  color: timesheet.isRunning ? Colors.black : Colors.white,
-                ),
-                onPressed: () {
-                  context
-                      .read<TasksBloc>()
-                      .add(ToggleTimesheetEvent(timesheet: timesheet));
-                },
-              )
-          ],
-        ),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      decoration: BoxDecoration(
+          color: !timesheet.isRunning
+              ? context.colorScheme.tertiary
+              : Colors.white,
+          borderRadius: BorderRadius.circular(64)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ElapsedTimeWidget(timesheet: timesheet),
+          if (!timesheet.isCompleted)
+            TapAnimatable(
+              child: Icon(
+                timesheet.isRunning ? Icons.pause : Icons.play_arrow,
+                color: timesheet.isRunning ? Colors.black : Colors.white,
+              ),
+              onPressed: () {
+                context
+                    .read<TasksBloc>()
+                    .add(ToggleTimesheetEvent(timesheet: timesheet));
+              },
+            )
+        ],
       ),
     );
   }

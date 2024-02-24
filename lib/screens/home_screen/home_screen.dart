@@ -8,7 +8,7 @@ import 'package:odoo_timer/screens/create_timer_screen/create_timer_screen.dart'
 import 'package:odoo_timer/screens/home_screen/widgets/no_timesheets_widget.dart';
 import 'package:odoo_timer/screens/home_screen/widgets/timesheet_card.dart';
 import 'package:odoo_timer/utils/utils.dart';
-import 'package:odoo_timer/widgets/custom_scaffold.dart';
+import 'package:odoo_timer/widgets/widgets.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -23,28 +23,36 @@ class HomeScreen extends StatelessWidget {
                 "Timesheets",
                 style: context.textTheme.headlineLarge,
               )),
-          actions: [
-            Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4),
-                child: Center(
-                  child: PlatformIconButton(
-                      padding: EdgeInsets.zero,
-                      color: context.colorScheme.secondary,
-                      icon: const Icon(Icons.add, color: Colors.white),
-                      onPressed: () {
-                        context
-                            .read<CreateTimerBloc>()
-                            .add(CreateTimerScreenInit());
-                        Navigator.of(context).push(platformPageRoute(
-                          context: context,
-                          builder: (context) => const CreateTimerScreen(),
-                        ));
-                      }),
-                )),
-          ],
+          actions: const [_CreateTimerButton()],
         ),
         body: const _Body());
+  }
+}
+
+class _CreateTimerButton extends StatelessWidget {
+  const _CreateTimerButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4),
+        child: Center(
+          child: TapAnimatable(
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    color: context.colorScheme.secondary,
+                    borderRadius: BorderRadius.circular(10)),
+                child: const Icon(Icons.add, color: Colors.white),
+              ),
+              onPressed: () {
+                context.read<CreateTimerBloc>().add(CreateTimerScreenInit());
+                Navigator.of(context).push(platformPageRoute(
+                  context: context,
+                  builder: (context) => const CreateTimerScreen(),
+                ));
+              }),
+        ));
   }
 }
 
@@ -99,14 +107,11 @@ class _TimesheetsListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<TasksBloc, TaskState>(
       builder: (context, state) {
-
-        if(state is! TaskInitialState) {
+        if (state is! TaskInitialState) {
           return const SizedBox();
         }
 
-
-        List<Timesheet> timesheets =
-            state.tasks.timesheetsFromAllTasks();
+        List<Timesheet> timesheets = state.tasks.timesheetsFromAllTasks();
 
         if (timesheets.isEmpty) {
           return const NoTimesheetsWidget();
@@ -115,12 +120,11 @@ class _TimesheetsListView extends StatelessWidget {
         return ListView.builder(
             itemCount: timesheets.length,
             itemBuilder: (context, index) {
-              
               return TimesheetCard(
-                  task: state.tasks.firstWhere(
-                      (task) => task.id == timesheets[index].taskId),
-                  timesheet: timesheets[index],
-                );
+                task: state.tasks
+                    .firstWhere((task) => task.id == timesheets[index].taskId),
+                timesheet: timesheets[index],
+              );
             });
       },
     );

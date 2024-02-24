@@ -16,19 +16,21 @@ class AppTheme {
         elevation: 0,
       ),
       tabBarTheme: const TabBarTheme(
-        dividerColor: Colors.white,
-        dividerHeight: 0.5,
-        indicatorSize: TabBarIndicatorSize.label,
-        unselectedLabelColor: Colors.white
-      ),
+          dividerColor: Colors.white,
+          dividerHeight: 0.5,
+          indicatorSize: TabBarIndicatorSize.label,
+          unselectedLabelColor: Colors.white),
       checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateColor.resolveWith((states) => Colors.white),
-        checkColor: MaterialStateColor.resolveWith((states) =>  Colors.black),
-        overlayColor: MaterialStateColor.resolveWith((states) => Colors.white),
-      ),
-      dialogTheme: const DialogTheme(
-        backgroundColor: Color.fromARGB(255, 58, 80, 144)
-      ),
+          fillColor: MaterialStateColor.resolveWith((states) => Colors.white),
+          checkColor: MaterialStateColor.resolveWith((states) => Colors.black),
+          overlayColor:
+              MaterialStateColor.resolveWith((states) => Colors.white),
+          side: const BorderSide(
+            color: Colors.white, 
+            width: 2.0, 
+          )),
+      dialogTheme:
+          const DialogTheme(backgroundColor: Color.fromARGB(255, 58, 80, 144)),
       colorScheme: const ColorScheme.light(
           brightness: Brightness.light,
           primary: Colors.white,

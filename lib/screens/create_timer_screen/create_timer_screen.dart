@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:odoo_timer/bloc/create_timer_bloc/create_timer_bloc.dart';
 import 'package:odoo_timer/bloc/tasks_bloc/tasks_bloc.dart';
 import 'package:odoo_timer/models/models.dart';
@@ -16,7 +15,9 @@ class CreateTimerScreen extends StatelessWidget {
     return BlocListener<CreateTimerBloc, CreateTimerState>(
       listener: (context, state) {
         if (state is CreateTimerFormValidationSuccess) {
-          context.read<TasksBloc>().add(AddTimesheetToTaskEvent(timesheet: state.timesheet));
+          context
+              .read<TasksBloc>()
+              .add(AddTimesheetToTaskEvent(timesheet: state.timesheet));
           Navigator.pop(context);
         } else if (state is CreateTimerFormValidationError) {
           showSimpleNotification(
@@ -26,23 +27,13 @@ class CreateTimerScreen extends StatelessWidget {
       },
       child: CustomScaffold(
           appBar: AppBar(
-            title: Text("Create Timer", style: context.textTheme.headlineLarge),
+            title: Text("Create Timer", style: context.textTheme.headlineSmall),
           ),
-          body: SafeArea(
+          body: const SafeArea(
             child: Stack(
               children: [
-                const Align(alignment: Alignment.topCenter, child: _Form()),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: PlatformElevatedButton(
-                    child: const Text("Create Timer"),
-                    onPressed: () {
-                      context
-                          .read<CreateTimerBloc>()
-                          .add(CreateTimerButtonTapEvent());
-                    },
-                  ),
-                )
+                Align(alignment: Alignment.topCenter, child: _Form()),
+                _CreateTimerButton()
               ],
             ),
           )),
@@ -121,6 +112,36 @@ class _Form extends StatelessWidget {
             );
         }
       }),
+    );
+  }
+}
+
+class _CreateTimerButton extends StatelessWidget {
+  const _CreateTimerButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: TapAnimatable(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 10),
+          child: Container(
+              height: 48,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: context.colorScheme.tertiary,
+                  borderRadius: BorderRadius.circular(15)),
+              child: Center(
+                  child: Text(
+                "Create Timer",
+                style: context.textTheme.labelLarge,
+              ))),
+        ),
+        onPressed: () {
+          context.read<CreateTimerBloc>().add(CreateTimerButtonTapEvent());
+        },
+      ),
     );
   }
 }

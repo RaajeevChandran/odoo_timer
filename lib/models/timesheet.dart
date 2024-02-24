@@ -17,6 +17,8 @@ class Timesheet {
 
   String description, lastElapsedTime;
 
+  DateTime? startTime;
+
   late StreamController<String> _elapsedTimeStreamController;
 
   Stream<String> get elapsedTimeStream => _elapsedTimeStreamController.stream;
@@ -60,6 +62,7 @@ class Timesheet {
   void _startTimer() {
     if (!isRunning) {
       isRunning = true;
+      startTime = DateTime.now();
       timer = Timer.periodic(const Duration(seconds: 1), (_) {
         _elapsedTimeStreamController.add(_elapsedTime);
         lastElapsedTime = _elapsedTime;
