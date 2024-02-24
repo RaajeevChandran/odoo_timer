@@ -109,8 +109,8 @@ class _Form extends StatelessWidget {
                   return Row(
                     children: [
                       Checkbox(value: isFavorite, onChanged: onChanged),
-                      GestureDetector(
-                          onTap: () {
+                      TapAnimatable(
+                          onPressed: () {
                             onChanged(!isFavorite);
                           },
                           child: const Text("Make Favorite"))
