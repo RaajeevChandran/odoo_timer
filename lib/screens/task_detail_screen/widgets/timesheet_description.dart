@@ -21,10 +21,6 @@ class TimesheetDescription extends StatelessWidget {
                 "Description",
                 style: context.textTheme.bodySmall,
               ),
-              GestureDetector(
-                onTap: () {},
-                child: const Icon(CupertinoIcons.pencil),
-              )
             ],
           ),
           const SizedBox(
