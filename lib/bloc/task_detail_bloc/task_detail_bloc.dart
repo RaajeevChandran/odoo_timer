@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:odoo_timer/models/models.dart';
-import 'package:odoo_timer/screens/task_detail_screen/task_detail_screen.dart';
 
 part 'task_detail_event.dart';
 part 'task_detail_state.dart';
@@ -25,6 +24,14 @@ class TaskDetailBloc extends Bloc<TaskDetailEvent, TaskDetailState> {
 
         emit(FavoriteValueChanged(task: task));
         emit(TaskDetailInitial(task: task));
+      }
+    });
+
+    on<CompletedTimesheetEvent>((event,emit) {
+      if (state is TaskDetailInitial) {
+         final task = (state as TaskDetailInitial).task!;
+         task.timesheets.firstWhere((element) => element.id == event.timesheet.id).isCompleted = event.timesheet.isCompleted;
+         emit(TaskDetailInitial(task: task));
       }
     });
     

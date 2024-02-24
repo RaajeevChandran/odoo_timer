@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:odoo_timer/bloc/task_detail_bloc/task_detail_bloc.dart';
 import 'package:odoo_timer/bloc/tasks_bloc/tasks_bloc.dart';
 import 'package:odoo_timer/models/models.dart';
 import 'package:odoo_timer/screens/task_detail_screen/widgets/project_info_for_timesheet.dart';
@@ -59,13 +60,11 @@ class _TimerInfo extends StatelessWidget {
           ),
           BlocBuilder<TasksBloc, TaskState>(
             builder: (context, state) {
-
-              if(state is! TaskInitialState) {
+              if (state is! TaskInitialState) {
                 return const SizedBox();
               }
 
-              final _timesheet =
-                  state.tasks.getTimesheet(timesheet.id);
+              final _timesheet = state.tasks.getTimesheet(timesheet.id);
 
               return _timesheet.isCompleted
                   ? const SizedBox()
@@ -78,6 +77,8 @@ class _TimerInfo extends StatelessWidget {
                           onTap: () {
                             context.read<TasksBloc>().add(
                                 CompleteTimesheetEvent(timesheet: timesheet));
+                            context.read<TaskDetailBloc>().add(
+                                CompletedTimesheetEvent(timesheet: timesheet));
                           },
                           backgroundColor: context.colorScheme.tertiary,
                         ),
@@ -88,8 +89,8 @@ class _TimerInfo extends StatelessWidget {
                               : Icons.play_arrow,
                           onTap: () {
                             context.read<TasksBloc>().add(
-                                ToggleTimesheetEvent(timesheet: timesheet));                            
-                          },  
+                                ToggleTimesheetEvent(timesheet: timesheet));
+                          },
                           backgroundColor: context.colorScheme.primary,
                           iconColor: context.colorScheme.onPrimary,
                         ),

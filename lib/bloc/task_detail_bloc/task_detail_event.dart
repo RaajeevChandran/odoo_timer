@@ -20,3 +20,9 @@ final class ToggleFavoriteEvent extends TaskDetailEvent {
 
   ToggleFavoriteEvent({required this.task});
 }
+
+final class CompletedTimesheetEvent extends TaskDetailEvent {
+  final Timesheet timesheet;
+
+  CompletedTimesheetEvent({required this.timesheet});
+}
