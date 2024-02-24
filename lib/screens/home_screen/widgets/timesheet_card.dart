@@ -7,7 +7,7 @@ import 'package:odoo_timer/bloc/tasks_bloc/tasks_bloc.dart';
 import 'package:odoo_timer/models/models.dart';
 import 'package:odoo_timer/screens/task_detail_screen/task_detail_screen.dart';
 import 'package:odoo_timer/utils/utils.dart';
-import 'package:odoo_timer/widgets/elapsed_time_widget.dart';
+import 'package:odoo_timer/widgets/widgets.dart';
 
 class TimesheetCard extends StatelessWidget {
   final Task task;
@@ -18,8 +18,8 @@ class TimesheetCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: GestureDetector(
-        onTap: () {
+      child: TapAnimatable(
+        onPressed: () {
           context.read<TaskDetailBloc>().add(TaskDetailInit(task: task));
           Navigator.push(context, platformPageRoute(context: context,builder: (_) => const TaskDetailsScreen()));
         },
@@ -135,12 +135,12 @@ class _TimerToggle extends StatelessWidget {
           children: [
             ElapsedTimeWidget(timesheet: timesheet),
             if (!timesheet.isCompleted)
-              GestureDetector(
+              TapAnimatable(
                 child: Icon(
                   timesheet.isRunning ? Icons.pause : Icons.play_arrow,
                   color: timesheet.isRunning ? Colors.black : Colors.white,
                 ),
-                onTap: () {
+                onPressed: () {
                   context
                       .read<TasksBloc>()
                       .add(ToggleTimesheetEvent(timesheet: timesheet));

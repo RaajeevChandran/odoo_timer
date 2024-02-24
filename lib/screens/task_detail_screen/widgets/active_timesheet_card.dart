@@ -9,6 +9,8 @@ import 'package:odoo_timer/utils/utils.dart';
 import 'package:odoo_timer/widgets/custom_divider.dart';
 import 'package:odoo_timer/widgets/elapsed_time_widget.dart';
 
+import '../../../widgets/widgets.dart';
+
 class ActiveTimesheetCard extends StatelessWidget {
   final Timesheet timesheet;
   const ActiveTimesheetCard({required this.timesheet, super.key});
@@ -120,8 +122,8 @@ class _TimerControlButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
+    return TapAnimatable(
+      onPressed: onTap,
       child: Container(
         decoration:
             BoxDecoration(shape: BoxShape.circle, color: backgroundColor),
