@@ -6,9 +6,6 @@ import 'package:odoo_timer/models/models.dart';
 import 'package:odoo_timer/screens/task_detail_screen/widgets/project_info_for_timesheet.dart';
 import 'package:odoo_timer/screens/task_detail_screen/widgets/timesheet_description.dart';
 import 'package:odoo_timer/utils/utils.dart';
-import 'package:odoo_timer/widgets/custom_divider.dart';
-import 'package:odoo_timer/widgets/elapsed_time_widget.dart';
-
 import '../../../widgets/widgets.dart';
 
 class ActiveTimesheetCard extends StatelessWidget {
@@ -31,7 +28,7 @@ class ActiveTimesheetCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const ProjectInfoForTimesheet(),
+              ProjectInfoForTimesheet(timesheet: timesheet,),
               _TimerInfo(timesheet: timesheet),
               if (timesheet.description.isNotEmpty) ...[
                 const CustomDivider(),
@@ -73,7 +70,7 @@ class _TimerInfo extends StatelessWidget {
                   : Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        _TimerControlButton(
+                      if(_timesheet.startTime != null)  _TimerControlButton(
                           timesheet: timesheet,
                           icon: Icons.stop,
                           onTap: () {

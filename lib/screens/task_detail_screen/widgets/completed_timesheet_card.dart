@@ -25,7 +25,7 @@ class CompletedTimesheetCard extends StatelessWidget {
                 children: [
                   const Icon(CupertinoIcons.check_mark_circled_solid),
                   const SizedBox(width: 10,),
-                  const Expanded(child: ProjectInfoForTimesheet()),
+                  Expanded(child: ProjectInfoForTimesheet(timesheet: timesheet,)),
                   Container(
                     decoration: BoxDecoration(
                       color: context.colorScheme.tertiary,

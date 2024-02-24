@@ -18,8 +18,8 @@ class TimesheetCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TapAnimatable(
-        onPressed: () {
+      child: GestureDetector(
+        onTap: () {
           context.read<TaskDetailBloc>().add(TaskDetailInit(task: task));
           Navigator.push(context, platformPageRoute(context: context,builder: (_) => const TaskDetailsScreen()));
         },

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:odoo_timer/bloc/task_detail_bloc/task_detail_bloc.dart';
 import 'package:odoo_timer/models/models.dart';
@@ -12,14 +13,15 @@ class EditTaskOptions extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<TaskDetailBloc, TaskDetailState>(
       listener: (context, state) {
-        if(state is DeletedTaskInTaskDetail) {
+        if (state is DeletedTaskInTaskDetail) {
           Navigator.pop(context);
         }
       },
       child: Container(
         decoration: BoxDecoration(
             color: context.colorScheme.surface,
-            borderRadius: BorderRadius.circular(25)),
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(25), topRight: Radius.circular(25))),
         height: 180,
         padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
         child: Center(
@@ -41,8 +43,12 @@ class EditTaskOptions extends StatelessWidget {
                                 .add(DeletedTaskInTaskDetailEvent(task: task));
                           })
                       : _Option(
-                          icon: task.isFavorite ? CupertinoIcons.star_fill : CupertinoIcons.star,
-                          label: task.isFavorite ? "Remove from Favorites" : "Favorite",
+                          icon: task.isFavorite
+                              ? CupertinoIcons.star_fill
+                              : CupertinoIcons.star,
+                          label: task.isFavorite
+                              ? "Remove from Favorites"
+                              : "Favorite",
                           onTap: () {
                             context
                                 .read<TaskDetailBloc>()
@@ -79,9 +85,11 @@ class _Option extends StatelessWidget {
             const SizedBox(
               width: 10,
             ),
-            Text(label,
-                style: context.textTheme.labelLarge
-                    ?.copyWith(fontWeight: FontWeight.w600))
+            Expanded(
+              child: Text(label,
+                  style: context.textTheme.labelLarge
+                      ?.copyWith(fontWeight: FontWeight.w600)),
+            )
           ],
         ),
       ),
