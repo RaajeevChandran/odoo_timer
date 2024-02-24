@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -70,8 +69,6 @@ class _TimesheetInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // constraints:
-    //       BoxConstraints(maxWidth: (context.getMaxContentWidth() ?? MediaQuery.of(context).size.width) * (kIsWeb ? 0.7 : 0.56)),
     return Expanded(
       flex: 3,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
