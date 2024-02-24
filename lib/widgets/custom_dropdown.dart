@@ -71,7 +71,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
   OverlayEntry _createOverlayEntry() {
     RenderBox renderBox = _key.currentContext!.findRenderObject() as RenderBox;
     Offset position = renderBox.localToGlobal(Offset.zero);
-    double screenWidth = MediaQuery.of(context).size.width;
+    double screenWidth = context.getMaxContentWidth() ?? MediaQuery.of(context).size.width;
 
     return OverlayEntry(
         builder: (context) => Positioned(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:odoo_timer/utils/utils.dart';
+import 'package:odoo_timer/widgets/responsive_widget.dart';
 
 /// Creates a [Scaffold] widget with the gradient background as per design system
 class CustomScaffold extends StatelessWidget {
@@ -22,7 +23,7 @@ class CustomScaffold extends StatelessWidget {
               context.colorScheme.surface,
             ],
           )),
-          child: body),
+          child: ResponsiveWidget(child: body)),
     );
   }
 }
