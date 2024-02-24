@@ -10,4 +10,3 @@ class TaskInitialState extends TaskState {
 }
 
 class TimesheetCreateButtonTapState extends TaskState {}
-

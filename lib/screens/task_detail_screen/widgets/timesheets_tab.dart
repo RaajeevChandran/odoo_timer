@@ -36,10 +36,14 @@ class _Timesheets extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TaskDetailBloc, TaskDetailState>(builder: (_, state) {
-      final currenState = state as TaskDetailInitial;
+
+      if(state is! TaskDetailInitial) {
+        return const SizedBox();
+      }
+
       List<Timesheet> timesheets = showCompleted
-          ? currenState.task!.completedTimesheets
-          : currenState.task!.activeTimesheets;
+          ? state.task!.completedTimesheets
+          : state.task!.activeTimesheets;
       return Column(
         children: List.generate(
             timesheets.length,

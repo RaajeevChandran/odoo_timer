@@ -4,12 +4,14 @@ class Task {
   final String id, name, description;
   Project project;
   List<Timesheet> timesheets = [];
+  bool isFavorite;
 
   Task(
       {required this.id,
       required this.name,
       required this.project,
-      required this.description});
+      required this.description,
+      this.isFavorite = false});
 
   List<Timesheet> get activeTimesheets {
     return timesheets.where((timesheet) => !timesheet.isCompleted).toList();

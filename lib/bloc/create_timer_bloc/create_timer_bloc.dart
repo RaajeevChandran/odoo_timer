@@ -41,6 +41,7 @@ class CreateTimerBloc extends Bloc<CreateTimerEvent, CreateTimerState> {
         final currentState = state as CreateTimerInitial;
         if (currentState.project != null && currentState.task != null) {
           currentState.task!.project = currentState.project!;
+          currentState.task!.isFavorite = currentState.isFavorite;
           emit(CreateTimerFormValidationSuccess(task: currentState.task!, timesheet: Timesheet(
               id: DateTime.now().millisecondsSinceEpoch,
               description: currentState.description,

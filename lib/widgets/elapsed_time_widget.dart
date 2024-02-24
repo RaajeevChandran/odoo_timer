@@ -23,7 +23,7 @@ class ElapsedTimeWidget extends StatelessWidget {
                         !timesheet.isRunning ? Colors.white : Colors.black),
           );
         }
-        return Container();
+        return const SizedBox();
       },
     );
   }

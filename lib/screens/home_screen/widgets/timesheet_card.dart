@@ -19,7 +19,7 @@ class TimesheetCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: GestureDetector(
-        onTap: (){
+        onTap: () {
           context.read<TaskDetailBloc>().add(TaskDetailInit(task: task));
           Navigator.push(context, platformPageRoute(context: context,builder: (_) => const TaskDetailsScreen()));
         },
@@ -73,11 +73,16 @@ class _TimesheetInfo extends StatelessWidget {
       constraints:
           BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.56),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        _buildInfo(timesheet.isFavorite ? CupertinoIcons.star_fill : CupertinoIcons.star, task.project.name,
+        _buildInfo(
+            task.isFavorite
+                ? CupertinoIcons.star_fill
+                : CupertinoIcons.star,
+            task.project.name,
             context.textTheme.titleMedium),
-        _buildInfo(CupertinoIcons.bag, task.name,
-            context.textTheme.bodyMedium),
-        _buildInfo(CupertinoIcons.clock, "Deadline ${task.project.deadline.format()}",
+        _buildInfo(CupertinoIcons.bag, task.name, context.textTheme.bodyMedium),
+        _buildInfo(
+            CupertinoIcons.clock,
+            "Deadline ${task.project.deadline.format()}",
             context.textTheme.bodyMedium),
       ]),
     );
@@ -90,7 +95,10 @@ class _TimesheetInfo extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 15,),
+          Icon(
+            icon,
+            size: 15,
+          ),
           const SizedBox(
             width: 5,
           ),
@@ -115,28 +123,32 @@ class _TimerToggle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            decoration: BoxDecoration(
-                color: !timesheet.isRunning ? context.colorScheme.tertiary : Colors.white, borderRadius: BorderRadius.circular(64)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ElapsedTimeWidget(timesheet: timesheet),
-                if(!timesheet.isCompleted) GestureDetector(
-                      child: Icon(
-                        timesheet.isRunning ? Icons.pause : Icons.play_arrow,
-                        color: timesheet.isRunning ? Colors.black : Colors.white,
-                      ),
-                      onTap: () {
-                        context
-                            .read<TasksBloc>()
-                            .add(ToggleTimesheetEvent(timesheet: timesheet));
-                      },
-                    )
-              ],
-            ),
-          ),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        decoration: BoxDecoration(
+            color: !timesheet.isRunning
+                ? context.colorScheme.tertiary
+                : Colors.white,
+            borderRadius: BorderRadius.circular(64)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ElapsedTimeWidget(timesheet: timesheet),
+            if (!timesheet.isCompleted)
+              GestureDetector(
+                child: Icon(
+                  timesheet.isRunning ? Icons.pause : Icons.play_arrow,
+                  color: timesheet.isRunning ? Colors.black : Colors.white,
+                ),
+                onTap: () {
+                  context
+                      .read<TasksBloc>()
+                      .add(ToggleTimesheetEvent(timesheet: timesheet));
+                },
+              )
+          ],
+        ),
+      ),
     );
   }
 }

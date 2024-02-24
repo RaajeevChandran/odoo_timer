@@ -20,3 +20,14 @@ final class CompleteTimesheetEvent extends TaskEvent {
 
   CompleteTimesheetEvent({required this.timesheet});
 }
+
+final class DeleteTaskEvent extends TaskEvent {
+  final Task task;
+
+  DeleteTaskEvent({required this.task});
+}
+
+final class FavoriteValueChangedEvent extends TaskEvent {
+  final Task task;
+  FavoriteValueChangedEvent({required this.task});
+}

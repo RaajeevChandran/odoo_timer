@@ -99,10 +99,14 @@ class _TimesheetsListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<TasksBloc, TaskState>(
       builder: (context, state) {
-        final currentState = state as TaskInitialState;
+
+        if(state is! TaskInitialState) {
+          return const SizedBox();
+        }
+
 
         List<Timesheet> timesheets =
-            currentState.tasks.timesheetsFromAllTasks();
+            state.tasks.timesheetsFromAllTasks();
 
         if (timesheets.isEmpty) {
           return const NoTimesheetsWidget();
@@ -110,11 +114,14 @@ class _TimesheetsListView extends StatelessWidget {
 
         return ListView.builder(
             itemCount: timesheets.length,
-            itemBuilder: (context, index) => TimesheetCard(
-                  task: currentState.tasks.firstWhere(
+            itemBuilder: (context, index) {
+              
+              return TimesheetCard(
+                  task: state.tasks.firstWhere(
                       (task) => task.id == timesheets[index].taskId),
                   timesheet: timesheets[index],
-                ));
+                );
+            });
       },
     );
   }

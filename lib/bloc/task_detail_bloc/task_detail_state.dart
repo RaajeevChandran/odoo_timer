@@ -8,3 +8,15 @@ final class TaskDetailInitial extends TaskDetailState {
 
   TaskDetailInitial({this.task});
 }
+
+final class DeletedTaskInTaskDetail extends TaskDetailState {
+  final Task task;
+
+  DeletedTaskInTaskDetail({required this.task});
+}
+
+final class FavoriteValueChanged extends TaskDetailState {
+  final Task task;
+
+  FavoriteValueChanged({required this.task});
+}

@@ -16,6 +16,10 @@ class TasksBloc extends Bloc<TaskEvent, TaskState> {
     on<ToggleTimesheetEvent>(_onToggleTimesheetEvent);
 
     on<CompleteTimesheetEvent>(_onCompleteTimesheetevent);
+
+    on<DeleteTaskEvent>(_onDeleteTaskEvent);
+
+    on<FavoriteValueChangedEvent>(_onFavoriteValueChanged);
   }
 
   void _onAddTimesheetToTaskEvent(
@@ -43,7 +47,7 @@ class TasksBloc extends Bloc<TaskEvent, TaskState> {
 
       if (timer.isRunning) {
         _addSubscription(timer);
-      }else {
+      } else {
         _removeSubscription(timer);
       }
 
@@ -51,46 +55,71 @@ class TasksBloc extends Bloc<TaskEvent, TaskState> {
     }
   }
 
-  void _onCompleteTimesheetevent(CompleteTimesheetEvent event, Emitter<TaskState> emit) {
+  void _onCompleteTimesheetevent(
+      CompleteTimesheetEvent event, Emitter<TaskState> emit) {
     if (state is TaskInitialState) {
       final currentState = state as TaskInitialState;
-      final timesheet = currentState.tasks
-          .getTimesheet(event.timesheet.id);
+      final timesheet = currentState.tasks.getTimesheet(event.timesheet.id);
       timesheet.markAsCompleted();
       _removeSubscription(timesheet);
       emit(TaskInitialState(currentState.tasks));
     }
   }
 
+  void _onDeleteTaskEvent(DeleteTaskEvent event, Emitter<TaskState> emit) {
+    if (state is TaskInitialState) {
+      final currentState = state as TaskInitialState;
+      currentState.tasks.removeWhere((task) => event.task.id == task.id);
+      emit(TaskInitialState(currentState.tasks));
+    }
+  }
+
+  void _onFavoriteValueChanged(FavoriteValueChangedEvent event, Emitter<TaskState> emit) {
+    if (state is TaskInitialState) {
+      final currentState = state as TaskInitialState;
+      final taskIndex = currentState.tasks.indexWhere((element) => element.id == event.task.id);
+      if(taskIndex != -1) {
+        currentState.tasks[taskIndex] = event.task;
+      }
+      emit(TaskInitialState(currentState.tasks));
+    }
+  }
+
   void _addSubscription(Timesheet timer) {
     StreamSubscription<String> subscription =
-            timer.elapsedTimeStream.listen((elapsedTime) {
-          final currentState = (state as TaskInitialState);
+        timer.elapsedTimeStream.listen((elapsedTime) {
+      final currentState = (state as TaskInitialState);
 
-          final task =
-              currentState.tasks.firstWhere((task) => task.id == timer.taskId);
+      final task =
+          currentState.tasks.firstWhere((task) => task.id == timer.taskId);
 
-          final updatedTimesheets = List<Timesheet>.from(task.timesheets);
+      final updatedTimesheets = List<Timesheet>.from(task.timesheets);
 
-          final timesheetIndex =
-              updatedTimesheets.indexWhere((element) => element.id == timer.id);
+      final timesheetIndex =
+          updatedTimesheets.indexWhere((element) => element.id == timer.id);
 
-          updatedTimesheets[timesheetIndex] = timer;
+      updatedTimesheets[timesheetIndex] = timer;
 
-          task.timesheets = updatedTimesheets;
+      task.timesheets = updatedTimesheets;
 
-          // ignore: invalid_use_of_visible_for_testing_member
-          emit(TaskInitialState(currentState.tasks));
-        });
+      // ignore: invalid_use_of_visible_for_testing_member
+      emit(TaskInitialState(currentState.tasks));
+    });
 
-        _subscriptions[timer.id] = [subscription];
+    if (!_subscriptions.containsKey(timer.id)) {
+      _subscriptions[timer.id] = [];
+    }
+    _subscriptions[timer.id]!.add(subscription);
   }
 
   void _removeSubscription(Timesheet timer) {
-    for (StreamSubscription<String> subscription in _subscriptions[timer.id]!) {
-          subscription.cancel();
-        }
-        _subscriptions.remove(timer.id);
+    if (_subscriptions.containsKey(timer.id)) {
+      for (StreamSubscription<String> subscription
+          in _subscriptions[timer.id]!) {
+        subscription.cancel();
+      }
+      _subscriptions.remove(timer.id);
+    }
   }
 
   @override
