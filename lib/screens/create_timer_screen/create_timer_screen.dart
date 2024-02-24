@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:odoo_timer/bloc/create_timer_bloc/create_timer_bloc.dart';
-import 'package:odoo_timer/bloc/timesheet_bloc/timesheet_bloc.dart';
+import 'package:odoo_timer/bloc/tasks_bloc/tasks_bloc.dart';
 import 'package:odoo_timer/models/models.dart';
 import 'package:odoo_timer/utils/utils.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -16,7 +16,7 @@ class CreateTimerScreen extends StatelessWidget {
     return BlocListener<CreateTimerBloc, CreateTimerState>(
       listener: (context, state) {
         if (state is CreateTimerFormValidationSuccess) {
-          context.read<TimesheetBloc>().add(AddTimesheetEvent(state.timesheet));
+          context.read<TasksBloc>().add(AddTimesheetToTaskEvent(timesheet: state.timesheet));
           Navigator.pop(context);
         } else if (state is CreateTimerFormValidationError) {
           showSimpleNotification(
@@ -83,7 +83,7 @@ class _Form extends StatelessWidget {
           case CreateTimerFormField.task:
             return CustomDropdown<Task>(
               hintText: field.name,
-              items: tasks
+              items: dummyTasks
                   .map((e) => CustomDropdownItem(value: e, label: e.name))
                   .toList(),
               onChanged: (dropdown) {

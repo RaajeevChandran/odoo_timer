@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:odoo_timer/models/models.dart';
 
 class Timesheet {
   // unique identifier
@@ -14,23 +13,24 @@ class Timesheet {
   // facilitates the updation of elapsed time in the UI by running it periodically for each second
   Timer? timer;
 
-  final Project project;
+  final String taskId;
 
-  final Task task;
+  String description, lastElapsedTime;
 
-  final StreamController<String> _elapsedTimeStreamController =
-      StreamController<String>();
+  late StreamController<String> _elapsedTimeStreamController;
 
   Stream<String> get elapsedTimeStream => _elapsedTimeStreamController.stream;
 
   Timesheet(
       {required this.id,
-      required this.project,
-      required this.task,
       required this.isFavorite,
+      required this.taskId,
       this.isRunning = false,
-      this.isCompleted = false})
+      this.isCompleted = false,
+      this.description = ""
+      ,this.lastElapsedTime = "00:00"})
       : stopwatch = Stopwatch() {
+    _elapsedTimeStreamController = StreamController<String>.broadcast();
     if (isRunning) {
       _startTimer();
     }
@@ -42,6 +42,11 @@ class Timesheet {
     } else {
       _startTimer();
     }
+  }
+
+  void markAsCompleted() {
+    isCompleted = true;
+    _stopTimer();
   }
 
   //private helper function that formats the time elapsed as 00:00 (mm:ss)
@@ -57,6 +62,7 @@ class Timesheet {
       isRunning = true;
       timer = Timer.periodic(const Duration(seconds: 1), (_) {
         _elapsedTimeStreamController.add(_elapsedTime);
+        lastElapsedTime = _elapsedTime;
       });
       stopwatch.start();
     }
