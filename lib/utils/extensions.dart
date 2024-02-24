@@ -1,3 +1,4 @@
+import "package:flutter/material.dart";
 import "package:intl/intl.dart";
 
 extension StringUtils on String {
@@ -13,5 +14,15 @@ extension DateTimeFormat on DateTime {
 
   String get dayName {
     return DateFormat('EEEE').format(this);
+  }
+}
+
+extension SliverExtension on List<Widget> {
+  List<Widget> toSlivers() {
+    return map((e) => SliverToBoxAdapter(child: e,)).toList();
+  }
+
+  List<Widget> applyPadding(EdgeInsetsGeometry padding) {
+    return map((e) => Padding(padding: padding, child: e,)).toList();
   }
 }

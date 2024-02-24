@@ -58,12 +58,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
               child: TabBarView(
                 controller: tabController,
                 children: const [TimesheetsTab(), DetailsTab()]
-                    .map((e) => Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 20, horizontal: 15),
-                          child: e,
-                        ))
-                    .toList(),
+                   .applyPadding(const EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 15))
               ),
             ),
           ],

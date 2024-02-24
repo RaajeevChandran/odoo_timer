@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:odoo_timer/bloc/task_detail_bloc/task_detail_bloc.dart';
 import 'package:odoo_timer/bloc/tasks_bloc/tasks_bloc.dart';
 import 'package:odoo_timer/models/models.dart';
+import 'package:odoo_timer/screens/task_detail_screen/widgets/project_info_for_timesheet.dart';
+import 'package:odoo_timer/screens/task_detail_screen/widgets/timesheet_description.dart';
 import 'package:odoo_timer/utils/utils.dart';
 import 'package:odoo_timer/widgets/elapsed_time_widget.dart';
 
@@ -27,51 +27,20 @@ class ActiveTimesheetCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const _ProjectDetails(),
+              const ProjectInfoForTimesheet(),
               _TimerInfo(timesheet: timesheet),
-              const Divider(
-                color: Colors.white,
-                thickness: .5,
-              ),
-              _Description(timesheet: timesheet)
+              if (timesheet.description.isNotEmpty) ...[
+                const Divider(
+                  color: Colors.white,
+                  thickness: .5,
+                ),
+                TimesheetDescription(timesheet: timesheet)
+              ]
             ],
           ),
         ),
       ),
     );
-  }
-}
-
-class _ProjectDetails extends StatelessWidget {
-  const _ProjectDetails();
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<TaskDetailBloc, TaskDetailState>(builder: (_, state) {
-      final currentState = state as TaskDetailInitial;
-
-      if (currentState.task == null) {
-        return const SizedBox();
-      }
-
-      Project project = currentState.task!.project;
-
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(project.deadline.dayName, style: context.textTheme.bodySmall),
-          Text(project.deadline.format(pattern: "MM.dd.yyyy"),
-              style: context.textTheme.titleMedium),
-          Text("Start Time 10:00", style: context.textTheme.bodySmall)
-        ]
-            .map((e) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 1),
-                  child: e,
-                ))
-            .toList(),
-      );
-    });
   }
 }
 
@@ -104,7 +73,8 @@ class _TimerInfo extends StatelessWidget {
                           timesheet: timesheet,
                           icon: Icons.stop,
                           onTap: () {
-                            context.read<TasksBloc>().add(CompleteTimesheetEvent(timesheet: timesheet));
+                            context.read<TasksBloc>().add(
+                                CompleteTimesheetEvent(timesheet: timesheet));
                           },
                           backgroundColor: context.colorScheme.tertiary,
                         ),
@@ -120,15 +90,8 @@ class _TimerInfo extends StatelessWidget {
                           backgroundColor: context.colorScheme.primary,
                           iconColor: context.colorScheme.onPrimary,
                         ),
-                        
-                      ]
-                          .map((e) => Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4),
-                                child: e,
-                              ))
-                          .toList(),
-                    );
+                      ].applyPadding(
+                          const EdgeInsets.symmetric(horizontal: 4)));
             },
           )
         ],
@@ -166,44 +129,6 @@ class _TimerControlButton extends StatelessWidget {
             color: iconColor,
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _Description extends StatelessWidget {
-  final Timesheet timesheet;
-  const _Description({required this.timesheet});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Description",
-                style: context.textTheme.bodySmall,
-              ),
-              GestureDetector(
-                onTap: () {},
-                child: const Icon(CupertinoIcons.pencil),
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            timesheet.description,
-            style: context.textTheme.bodyMedium,
-          ),
-        ],
       ),
     );
   }

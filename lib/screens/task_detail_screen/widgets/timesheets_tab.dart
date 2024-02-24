@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:odoo_timer/bloc/task_detail_bloc/task_detail_bloc.dart';
 import 'package:odoo_timer/screens/task_detail_screen/widgets/active_timesheet_card.dart';
+import 'package:odoo_timer/screens/task_detail_screen/widgets/completed_timesheet_card.dart';
+import 'package:odoo_timer/utils/utils.dart';
 
 import '../../../models/timesheet.dart';
 
@@ -10,29 +12,41 @@ class TimesheetsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  SingleChildScrollView(
-      child: Column(
-        children: [
-          _ActiveTimesheets()
-        ],
-      ),
+    return CustomScrollView(
+      slivers: [
+        const _Timesheets(
+          showCompleted: false,
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.0,horizontal: 4),
+          child: Text("Completed Records"),
+        ),
+        const _Timesheets(
+          showCompleted: true,
+        ),
+      ].toSlivers(),
     );
   }
 }
 
-class _ActiveTimesheets extends StatelessWidget {
-  const _ActiveTimesheets({super.key});
+class _Timesheets extends StatelessWidget {
+  final bool showCompleted;
+  const _Timesheets({required this.showCompleted});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TaskDetailBloc, TaskDetailState>(
-      builder: (_, state)  {
-        final currenState = state as TaskDetailInitial;
-        List<Timesheet> timesheets = currenState.task!.activeTimesheets;
-        return Column(
-        children: List.generate(timesheets.length, (index) => ActiveTimesheetCard(timesheet: timesheets[index])),
-              );
-      }
-    );
+    return BlocBuilder<TaskDetailBloc, TaskDetailState>(builder: (_, state) {
+      final currenState = state as TaskDetailInitial;
+      List<Timesheet> timesheets = showCompleted
+          ? currenState.task!.completedTimesheets
+          : currenState.task!.activeTimesheets;
+      return Column(
+        children: List.generate(
+            timesheets.length,
+            (index) => showCompleted
+                ? CompletedTimesheetCard(timesheet: timesheets[index])
+                : ActiveTimesheetCard(timesheet: timesheets[index])),
+      );
+    });
   }
 }

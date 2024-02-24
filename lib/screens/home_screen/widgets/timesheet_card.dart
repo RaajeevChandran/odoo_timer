@@ -113,27 +113,30 @@ class _TimerToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-          decoration: BoxDecoration(
-              color: !timesheet.isRunning ? context.colorScheme.tertiary : Colors.white, borderRadius: BorderRadius.circular(64)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElapsedTimeWidget(timesheet: timesheet),
-              GestureDetector(
-                    child: Icon(
-                      timesheet.isRunning ? Icons.pause : Icons.play_arrow,
-                      color: timesheet.isRunning ? Colors.black : Colors.white,
-                    ),
-                    onTap: () {
-                      context
-                          .read<TasksBloc>()
-                          .add(ToggleTimesheetEvent(timesheet: timesheet));
-                    },
-                  )
-            ],
+    return Expanded(
+      child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+            decoration: BoxDecoration(
+                color: !timesheet.isRunning ? context.colorScheme.tertiary : Colors.white, borderRadius: BorderRadius.circular(64)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ElapsedTimeWidget(timesheet: timesheet),
+                if(!timesheet.isCompleted) GestureDetector(
+                      child: Icon(
+                        timesheet.isRunning ? Icons.pause : Icons.play_arrow,
+                        color: timesheet.isRunning ? Colors.black : Colors.white,
+                      ),
+                      onTap: () {
+                        context
+                            .read<TasksBloc>()
+                            .add(ToggleTimesheetEvent(timesheet: timesheet));
+                      },
+                    )
+              ],
+            ),
           ),
-        );
+    );
   }
 }
