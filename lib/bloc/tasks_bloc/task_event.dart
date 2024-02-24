@@ -15,3 +15,8 @@ final class ToggleTimesheetEvent extends TaskEvent {
   ToggleTimesheetEvent({required this.timesheet});
 }
 
+final class CompleteTimesheetEvent extends TaskEvent {
+  final Timesheet timesheet;
+
+  CompleteTimesheetEvent({required this.timesheet});
+}

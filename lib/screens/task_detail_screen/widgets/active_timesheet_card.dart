@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:odoo_timer/bloc/task_detail_bloc/task_detail_bloc.dart';
+import 'package:odoo_timer/bloc/tasks_bloc/tasks_bloc.dart';
 import 'package:odoo_timer/models/models.dart';
-import 'package:odoo_timer/models/project.dart';
 import 'package:odoo_timer/utils/utils.dart';
+import 'package:odoo_timer/widgets/elapsed_time_widget.dart';
 
 class ActiveTimesheetCard extends StatelessWidget {
   final Timesheet timesheet;
@@ -13,26 +13,29 @@ class ActiveTimesheetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      elevation: 0,
-      borderRadius: BorderRadius.circular(15),
-      child: Container(
-        padding: const EdgeInsets.all(15),
-        width: double.infinity,
-        decoration: BoxDecoration(
-            color: context.colorScheme.secondary,
-            borderRadius: BorderRadius.circular(15)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _ProjectDetails(),
-            _TimerInfo(timesheet: timesheet),
-            Divider(
-              color: Colors.white,
-              thickness: .5,
-            ),
-            _Description(timesheet: timesheet)
-          ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Material(
+        elevation: 0,
+        borderRadius: BorderRadius.circular(15),
+        child: Container(
+          padding: const EdgeInsets.all(15),
+          width: double.infinity,
+          decoration: BoxDecoration(
+              color: context.colorScheme.secondary,
+              borderRadius: BorderRadius.circular(15)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const _ProjectDetails(),
+              _TimerInfo(timesheet: timesheet),
+              const Divider(
+                color: Colors.white,
+                thickness: .5,
+              ),
+              _Description(timesheet: timesheet)
+            ],
+          ),
         ),
       ),
     );
@@ -40,7 +43,7 @@ class ActiveTimesheetCard extends StatelessWidget {
 }
 
 class _ProjectDetails extends StatelessWidget {
-  const _ProjectDetails({super.key});
+  const _ProjectDetails();
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +77,7 @@ class _ProjectDetails extends StatelessWidget {
 
 class _TimerInfo extends StatelessWidget {
   final Timesheet timesheet;
-  const _TimerInfo({required this.timesheet, super.key});
+  const _TimerInfo({required this.timesheet});
 
   @override
   Widget build(BuildContext context) {
@@ -83,16 +86,50 @@ class _TimerInfo extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            "08:06:23",
-            style: context.textTheme.displaySmall,
+          ElapsedTimeWidget(
+            timesheet: timesheet,
+            forTaskDetailPage: true,
           ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _TimerControlButton(timesheet: timesheet, icon: Icons.stop, onTap: (){}, backgroundColor: context.colorScheme.tertiary,),
-              _TimerControlButton(timesheet: timesheet, icon: Icons.play_arrow, onTap: (){}, backgroundColor: context.colorScheme.primary, iconColor: context.colorScheme.onPrimary,)
-            ].map((e) => Padding(padding: EdgeInsets.symmetric(horizontal: 4),child: e,)).toList(),
+          BlocBuilder<TasksBloc, TaskState>(
+            builder: (context, state) {
+              final _timesheet =
+                  (state as TaskInitialState).tasks.getTimesheet(timesheet.id);
+
+              return _timesheet.isCompleted
+                  ? const SizedBox()
+                  : Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _TimerControlButton(
+                          timesheet: timesheet,
+                          icon: Icons.stop,
+                          onTap: () {
+                            context.read<TasksBloc>().add(CompleteTimesheetEvent(timesheet: timesheet));
+                          },
+                          backgroundColor: context.colorScheme.tertiary,
+                        ),
+                        _TimerControlButton(
+                          timesheet: timesheet,
+                          icon: _timesheet.isRunning
+                              ? Icons.pause
+                              : Icons.play_arrow,
+                          onTap: () {
+                            context.read<TasksBloc>().add(
+                                ToggleTimesheetEvent(timesheet: timesheet));
+                          },
+                          backgroundColor: context.colorScheme.primary,
+                          iconColor: context.colorScheme.onPrimary,
+                        ),
+                        
+                      ]
+                          .map((e) => Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 4),
+                                child: e,
+                              ))
+                          .toList(),
+                    );
+            },
           )
         ],
       ),
@@ -107,22 +144,36 @@ class _TimerControlButton extends StatelessWidget {
   final Color? backgroundColor;
   final Function() onTap;
 
-  const _TimerControlButton({required this.timesheet, required this.icon, this.iconColor, this.backgroundColor, required this.onTap, super.key});
+  const _TimerControlButton(
+      {required this.timesheet,
+      required this.icon,
+      this.iconColor,
+      this.backgroundColor,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(onTap: (){},child: Container(
-      decoration: BoxDecoration(shape: BoxShape.circle, color: backgroundColor),
-      height: 40,
-      width: 40,
-      child: Center(child: Icon(icon, color: iconColor,),),
-    ),);
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration:
+            BoxDecoration(shape: BoxShape.circle, color: backgroundColor),
+        height: 40,
+        width: 40,
+        child: Center(
+          child: Icon(
+            icon,
+            color: iconColor,
+          ),
+        ),
+      ),
+    );
   }
 }
 
 class _Description extends StatelessWidget {
   final Timesheet timesheet;
-  const _Description({required this.timesheet, super.key});
+  const _Description({required this.timesheet});
 
   @override
   Widget build(BuildContext context) {
@@ -135,12 +186,23 @@ class _Description extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Description", style: context.textTheme.bodySmall,),
-              GestureDetector(onTap: () {}, child: Icon(CupertinoIcons.pencil), )
+              Text(
+                "Description",
+                style: context.textTheme.bodySmall,
+              ),
+              GestureDetector(
+                onTap: () {},
+                child: const Icon(CupertinoIcons.pencil),
+              )
             ],
           ),
-          const SizedBox(height: 10,),
-          Text("In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.", style: context.textTheme.bodyMedium,),
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            timesheet.description,
+            style: context.textTheme.bodyMedium,
+          ),
         ],
       ),
     );

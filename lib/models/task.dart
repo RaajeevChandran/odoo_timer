@@ -14,6 +14,11 @@ class Task {
   List<Timesheet> get activeTimesheets {
     return timesheets.where((timesheet) => !timesheet.isCompleted).toList();
   }
+
+  List<Timesheet> get completedTimesheets {
+    return timesheets.where((timesheet) => timesheet.isCompleted).toList();
+  }
+  
 }
 
 extension TaskExtension on List<Task> {
@@ -23,5 +28,9 @@ extension TaskExtension on List<Task> {
       timesheets.addAll(task.timesheets);
     }
     return timesheets;
+  }
+
+  Timesheet getTimesheet(int id) {
+    return timesheetsFromAllTasks().firstWhere((element) => element.id == id);
   }
 }

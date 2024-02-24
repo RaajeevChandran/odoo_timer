@@ -8,52 +8,89 @@ part 'task_state.dart';
 part 'task_event.dart';
 
 class TasksBloc extends Bloc<TaskEvent, TaskState> {
+  Map<int, List<StreamSubscription<String>>> _subscriptions = {};
+
   TasksBloc() : super(TaskInitialState(dummyTasks)) {
-    
     on<AddTimesheetToTaskEvent>(_onAddTimesheetToTaskEvent);
 
     on<ToggleTimesheetEvent>(_onToggleTimesheetEvent);
 
-    // emits a state to facilitate the UI updation of elapsed time since the timer of timesheet started
-    (state as TaskInitialState).tasks.timesheetsFromAllTasks().forEach((timer) {
-      timer.elapsedTimeStream.listen((elapsedTime) {
-        final currentState = (state as TaskInitialState);
-        
-        final task = currentState.tasks.firstWhere((task) => task.id == timer.taskId);
-
-        final updatedTimesheets = List<Timesheet>.from(task.timesheets);
-        final timesheetIndex = updatedTimesheets.indexWhere((element) => element.id == timer.id);
-        updatedTimesheets[timesheetIndex] = timer;
-
-        task.timesheets = updatedTimesheets;
-
-        // ignore: invalid_use_of_visible_for_testing_member
-        emit(TaskInitialState(currentState.tasks));
-      });
-    });
+    on<CompleteTimesheetEvent>(_onCompleteTimesheetevent);
   }
 
+  void _onAddTimesheetToTaskEvent(
+      AddTimesheetToTaskEvent event, Emitter<TaskState> emit) {
+    final currentState = state as TaskInitialState;
 
-  void _onAddTimesheetToTaskEvent(AddTimesheetToTaskEvent event, Emitter<TaskState> emit) {
+    final task = currentState.tasks
+        .firstWhere((task) => task.id == event.timesheet.taskId);
+
+    task.timesheets.add(event.timesheet);
+
+    emit(TaskInitialState(currentState.tasks));
+  }
+
+  void _onToggleTimesheetEvent(
+      ToggleTimesheetEvent event, Emitter<TaskState> emit) {
+    if (state is TaskInitialState) {
       final currentState = state as TaskInitialState;
+      final task = currentState.tasks
+          .firstWhere((task) => task.id == event.timesheet.taskId);
 
-      final task = currentState.tasks.firstWhere((task) => task.id == event.timesheet.taskId);
+      final timer = task.timesheets
+          .firstWhere((timesheet) => timesheet.id == event.timesheet.id);
+      timer.toggle();
 
-      task.timesheets.add(event.timesheet);
+      if (timer.isRunning) {
+        _addSubscription(timer);
+      }else {
+        _removeSubscription(timer);
+      }
 
       emit(TaskInitialState(currentState.tasks));
+    }
   }
 
-  void _onToggleTimesheetEvent(ToggleTimesheetEvent event, Emitter<TaskState> emit) {
-      if (state is TaskInitialState) {
-        final currentState = state as TaskInitialState;
-        final task = currentState.tasks.firstWhere((task) => task.id == event.timesheet.taskId);
+  void _onCompleteTimesheetevent(CompleteTimesheetEvent event, Emitter<TaskState> emit) {
+    if (state is TaskInitialState) {
+      final currentState = state as TaskInitialState;
+      final timesheet = currentState.tasks
+          .getTimesheet(event.timesheet.id);
+      timesheet.markAsCompleted();
+      _removeSubscription(timesheet);
+      emit(TaskInitialState(currentState.tasks));
+    }
+  }
 
-        final timer = task.timesheets.firstWhere((timesheet) => timesheet.id == event.timesheet.id);
-        timer.toggle(); 
+  void _addSubscription(Timesheet timer) {
+    StreamSubscription<String> subscription =
+            timer.elapsedTimeStream.listen((elapsedTime) {
+          final currentState = (state as TaskInitialState);
 
-        emit(TaskInitialState(currentState.tasks));
-      }
+          final task =
+              currentState.tasks.firstWhere((task) => task.id == timer.taskId);
+
+          final updatedTimesheets = List<Timesheet>.from(task.timesheets);
+
+          final timesheetIndex =
+              updatedTimesheets.indexWhere((element) => element.id == timer.id);
+
+          updatedTimesheets[timesheetIndex] = timer;
+
+          task.timesheets = updatedTimesheets;
+
+          // ignore: invalid_use_of_visible_for_testing_member
+          emit(TaskInitialState(currentState.tasks));
+        });
+
+        _subscriptions[timer.id] = [subscription];
+  }
+
+  void _removeSubscription(Timesheet timer) {
+    for (StreamSubscription<String> subscription in _subscriptions[timer.id]!) {
+          subscription.cancel();
+        }
+        _subscriptions.remove(timer.id);
   }
 
   @override
@@ -64,4 +101,3 @@ class TasksBloc extends Bloc<TaskEvent, TaskState> {
     return super.close();
   }
 }
-

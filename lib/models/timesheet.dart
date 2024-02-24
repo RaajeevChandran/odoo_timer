@@ -15,10 +15,9 @@ class Timesheet {
 
   final String taskId;
 
-  String description;
+  String description, lastElapsedTime;
 
-  final StreamController<String> _elapsedTimeStreamController =
-      StreamController<String>();
+  late StreamController<String> _elapsedTimeStreamController;
 
   Stream<String> get elapsedTimeStream => _elapsedTimeStreamController.stream;
 
@@ -28,8 +27,10 @@ class Timesheet {
       required this.taskId,
       this.isRunning = false,
       this.isCompleted = false,
-      this.description = ""})
+      this.description = ""
+      ,this.lastElapsedTime = "00:00"})
       : stopwatch = Stopwatch() {
+    _elapsedTimeStreamController = StreamController<String>.broadcast();
     if (isRunning) {
       _startTimer();
     }
@@ -41,6 +42,11 @@ class Timesheet {
     } else {
       _startTimer();
     }
+  }
+
+  void markAsCompleted() {
+    isCompleted = true;
+    _stopTimer();
   }
 
   //private helper function that formats the time elapsed as 00:00 (mm:ss)
@@ -56,6 +62,7 @@ class Timesheet {
       isRunning = true;
       timer = Timer.periodic(const Duration(seconds: 1), (_) {
         _elapsedTimeStreamController.add(_elapsedTime);
+        lastElapsedTime = _elapsedTime;
       });
       stopwatch.start();
     }

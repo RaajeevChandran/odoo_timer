@@ -7,6 +7,7 @@ import 'package:odoo_timer/bloc/tasks_bloc/tasks_bloc.dart';
 import 'package:odoo_timer/models/models.dart';
 import 'package:odoo_timer/screens/task_detail_screen/task_detail_screen.dart';
 import 'package:odoo_timer/utils/utils.dart';
+import 'package:odoo_timer/widgets/elapsed_time_widget.dart';
 
 class TimesheetCard extends StatelessWidget {
   final Task task;
@@ -119,18 +120,7 @@ class _TimerToggle extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              StreamBuilder<String>(
-                stream: timesheet.elapsedTimeStream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData || snapshot.data == null) {
-                    return Text(
-                      snapshot.data == null ? "00:00" : snapshot.data!,
-                      style: context.textTheme.labelLarge?.copyWith(color: !timesheet.isRunning ? Colors.white: Colors.black),
-                    );
-                  }
-                  return Container();
-                },
-              ),
+              ElapsedTimeWidget(timesheet: timesheet),
               GestureDetector(
                     child: Icon(
                       timesheet.isRunning ? Icons.pause : Icons.play_arrow,
