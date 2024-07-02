@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
       child: OverlaySupport.global(
         child: ResponsiveSizer(
           builder:(_, __, ___) => MaterialApp(
+            debugShowCheckedModeBanner: false,
             theme: AppTheme.theme,
             home: const HomeScreen(),
           ),
